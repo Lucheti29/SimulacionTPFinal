@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<stage>
+	<qapeople>10</qapeople>
+	
+	<technology name="android">
+		<projects>3</projects>
+		<seniority>
+			<junior>10</junior>
+			<semisenior>10</semisenior>
+			<senior>10</senior>
+		</seniority>
+	</technology>
+
+	<technology name="ios">
+		<projects>4</projects>
+		<seniority>
+			<junior>15</junior>
+			<semisenior>15</semisenior>
+			<senior>15</senior>
+		</seniority>
+	</technology>
+	
+	<technology name="web">
+		<projects>2</projects>
+		<seniority>
+			<junior>20</junior>
+			<semisenior>21</semisenior>
+			<senior>22</senior>
+		</seniority>
+	</technology>
+</stage>

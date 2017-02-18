@@ -18,7 +18,7 @@ jar {
         attributes 'Implementation-Version': '0.1.0',
                 'Built-Date': new Date(),
                 'Built-JDK': System.getProperty('java.version'),
-                'Main-Class': 'com.github.luksdlt92.simulacion.Simulacion'
+                'Main-Class': 'com.github.luksdlt92.simulacion.Simulation'
     }
     archiveName = 'SimulacionFinal.jar'
 }

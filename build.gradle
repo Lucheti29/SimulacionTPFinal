@@ -22,3 +22,13 @@ jar {
     }
     archiveName = 'SimulacionFinal.jar'
 }
+
+task zip(type: Zip) {
+    def fileName = 'SimulacionFinal_' + new Date().format("yyyy-MM-dd")
+    baseName = fileName
+    from('runnable')
+    from(jar)
+    println 'Build in build/distributions/' + fileName + '.zip'
+}
+
+build.finalizedBy(zip)

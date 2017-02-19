@@ -15,7 +15,6 @@ public class SimulationInstance {
 	private int CPD[][]; //Cantidad de puntos de complejidad a desarrollar por equipo
 	
 	private final int cantSprintsFinal = 100000; //TODO agregar a las opciones 
-	private final int cantEquipos = 10; //TODO ESTO???
 	
 	private final int mQAPeopleAmount; //Equipo de QA
     private final int[] mProjectsAmount; //[technology]
@@ -65,7 +64,8 @@ public class SimulationInstance {
         		for (int iProject = 0; iProject < this.mProjectsAmount[aTechnology.getId()]; iProject++) {
             		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[aTechnology.getId()].length; iSeniority++) {
             			
-            			desarrollo(iSeniority, aTechnology.getId(), ANDROID_PORCENTAJE_PRIORIDAD); //TODO Parametrizar el porcentaje de c/tech
+            			//TODO Parametrizar el porcentaje de c/tech: ANDROID_PORCENTAJE_PRIORIDAD
+            			desarrollo(iSeniority, aTechnology.getId(), ANDROID_PORCENTAJE_PRIORIDAD); 
             		
             		}
         		}
@@ -76,7 +76,6 @@ public class SimulationInstance {
 //        			desarrollo(iSeniority);
 //        		}
 //        	}
-        	
         	pruebaQa();
         }
         
@@ -147,8 +146,8 @@ public class SimulationInstance {
     private void calcularResultados(){
     	porcentajeSprintsFallidos = sprintFallidos / cantSprintsFinal* 100;
 	    porcentajeSprintsOciosos = sprintOciosos / cantSprintsFinal * 100;
-	    promedioPuntosSobrantesPorSprintYEquipo = puntosSobrantes / (cantSprintsFinal * cantEquipos);
-	    promedioPuntosFaltantesPorSprintYEquipo = puntosNoCumplidos / (cantSprintsFinal * cantEquipos);
+	    promedioPuntosSobrantesPorSprintYEquipo = puntosSobrantes / (cantSprintsFinal * this.getCantEquipos());
+	    promedioPuntosFaltantesPorSprintYEquipo = puntosNoCumplidos / (cantSprintsFinal * this.getCantEquipos());
 	    porcentajeQaNoCompletaPrioridad = noCompletaPrioridad / cantSprintsFinal * 100;
 	    porcentajeQaNoCompletaComun = noCompletaComun / cantSprintsFinal * 100;
 	    porcentajeQaOcioso = qaOcioso / cantSprintsFinal * 100;
@@ -221,4 +220,15 @@ public class SimulationInstance {
 		return this.mTechnologySeniorities;
 	}
 
+	public int getCantEquipos() {
+    	int cantEquipos = 0;
+    	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
+    		cantEquipos += this.mProjectsAmount[unaTecnologia.getId()];
+    	}
+		return cantEquipos;
+	}
+    public int getCantEquipos(int iTech) {
+    	int cantEquipos = this.mProjectsAmount[ iTech ];
+		return cantEquipos;
+	}
 }

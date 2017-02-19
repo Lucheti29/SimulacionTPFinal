@@ -16,7 +16,6 @@ public class SimulationInstance2 {
     private final int[] mProjectsAmount; //[technology]
     private final int[][] mTechnologySeniorities; //[technology][seniority]
     private final int cantSprintsFinal; //TODO agregar a las opciones 
-	private final int cantEquipos = 10; //TODO ESTO???
     private int deltaT = 0;
     private final SimulationResults results;
     
@@ -136,8 +135,17 @@ public class SimulationInstance2 {
 		return this.mTechnologySeniorities;
 	}
     public int getCantEquipos() {
-		return this.cantEquipos;
+    	int cantEquipos = 0;
+    	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
+    		cantEquipos += this.mProjectsAmount[unaTecnologia.getId()];
+    	}
+		return cantEquipos;
 	}
+    public int getCantEquipos(int iTech) {
+    	int cantEquipos = this.mProjectsAmount[ iTech ];
+		return cantEquipos;
+	}
+    
     public int getCantSprintsFinal() {
 		return this.cantSprintsFinal;
 	}

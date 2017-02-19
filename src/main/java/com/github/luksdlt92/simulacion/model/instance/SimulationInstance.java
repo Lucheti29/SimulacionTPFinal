@@ -1,16 +1,22 @@
 package com.github.luksdlt92.simulacion.model.instance;
 
-import com.github.luksdlt92.simulacion.constant.Technology;
+import com.github.luksdlt92.simulacion.constant.TechnologyEnum;
 import com.github.luksdlt92.simulacion.fdp.ComplexityPointsDev;
 import com.github.luksdlt92.simulacion.fdp.ComplexityPointsQA;
 
-@SuppressWarnings("unused")//TODO remove
+/*
+ * SimulationInstance: es la transcripcion tal cual del diagrama, al estilo Alfiero
+ * SimulationInstance2: algo más civilizada
+ */
 public class SimulationInstance {
 	
 	private int CPP;//Cantidad de puntos de complejidad con prioridad a probar por QA
 	private int CP; //Cantidad de puntos de complejidad a probar por QA
 	private int CPD[][]; //Cantidad de puntos de complejidad a desarrollar por equipo
+	
 	private final int cantSprintsFinal = 100000; //TODO agregar a las opciones 
+	private final int cantEquipos = 10; //TODO ESTO???
+	
 	private final int mQAPeopleAmount; //Equipo de QA
     private final int[] mProjectsAmount; //[technology]
     private final int[][] mTechnologySeniorities; //[technology][seniority]
@@ -27,9 +33,9 @@ public class SimulationInstance {
 	private double puntosSobrantesQa = 0;
 	private int sprintFallidos = 0;
 	private int sprintOciosos = 0;
-    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10;
-    private final double IOS_PORCENTAJE_PRIORIDAD = 10;
-    private final double WEB_PORCENTAJE_PRIORIDAD = 10;
+	
+    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
+    
     //Resultados
     private double porcentajeSprintsFallidos = 0;
     private double porcentajeSprintsOciosos = 0;
@@ -48,17 +54,29 @@ public class SimulationInstance {
     public void run() {
         System.out.println("Running");
         
-        inicializar(); //TODO
+        inicializar();
         
         while(deltaT <= cantSprintsFinal){
         	deltaT++;
         	
         	algunEquipoFallo = Boolean.FALSE;
-        	for (int iProject = 0; iProject < this.mProjectsAmount[Technology.ANDROID]; iProject++) {
-        		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[Technology.ANDROID].length; iSeniority++) {
-        			desarrollo(iSeniority);
+        	
+        	for(TechnologyEnum aTechnology : TechnologyEnum.values()){
+        		for (int iProject = 0; iProject < this.mProjectsAmount[aTechnology.getId()]; iProject++) {
+            		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[aTechnology.getId()].length; iSeniority++) {
+            			
+            			desarrollo(iSeniority, aTechnology.getId(), ANDROID_PORCENTAJE_PRIORIDAD); //TODO Parametrizar el porcentaje de c/tech
+            		
+            		}
         		}
         	}
+        	
+//        	for (int iProject = 0; iProject < this.mProjectsAmount[Technology.ANDROID]; iProject++) {
+//        		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[Technology.ANDROID].length; iSeniority++) {
+//        			desarrollo(iSeniority);
+//        		}
+//        	}
+        	
         	pruebaQa();
         }
         
@@ -66,34 +84,35 @@ public class SimulationInstance {
         imprimir();
     }
     
-    private void inicializar(){
+    private void inicializar(){ //TODO
     	
     }
     
-    private void desarrollo(int iSeniority){
-    	double IPD = ComplexityPointsDev.getEstimatedPointsPerSprint(Technology.ANDROID);
-    	CPD[Technology.ANDROID][iSeniority] += IPD;
+    private void desarrollo(int iSeniority, int iTechnology, double techPorcentajePrioridad){
+    	double IPD = ComplexityPointsDev.getEstimatedPointsPerSprint(iTechnology);
+    	CPD[iTechnology][iSeniority] += IPD;
     	
-    	double DP = ComplexityPointsDev.getCompletedPointsPerHour(Technology.ANDROID, iSeniority);
-    	CPD[Technology.ANDROID][iSeniority] -= DP;
+    	double DP = ComplexityPointsDev.getCompletedPointsPerHour(iTechnology, iSeniority);
+    	CPD[iTechnology][iSeniority] -= DP;
     	
-    	if(CPD[Technology.ANDROID][iSeniority] > 0){
+    	if(CPD[iTechnology][iSeniority] > 0){
     		algunEquipoFallo = Boolean.TRUE;
-    		puntosNoCumplidos += CPD[Technology.ANDROID][iSeniority];
+    		puntosNoCumplidos += CPD[iTechnology][iSeniority];
     	}
-    	if(CPD[Technology.ANDROID][iSeniority] < 0){
+    	if(CPD[iTechnology][iSeniority] < 0){
     		algunEquipoOcioso = Boolean.TRUE;
-    		puntosSobrantes += CPD[Technology.ANDROID][iSeniority];
-    		DP -= CPD[Technology.ANDROID][iSeniority];
-    		CPD[Technology.ANDROID][iSeniority] = 0;
+    		puntosSobrantes += CPD[iTechnology][iSeniority];
+    		DP -= CPD[iTechnology][iSeniority];
+    		CPD[iTechnology][iSeniority] = 0;
     	}
     	
     	double R = Math.random();
-    	if(R > ANDROID_PORCENTAJE_PRIORIDAD)
+    	if(R > techPorcentajePrioridad)
     		CP += DP;
     	else
     		CPP += DP;
     }
+    
     private void pruebaQa(){
     	double PPD = ComplexityPointsQA.getPointsTestedPerHour();
     	CPP -= PPD;
@@ -124,9 +143,8 @@ public class SimulationInstance {
     		sprintOciosos++;
     	}
     }
+    
     private void calcularResultados(){
-    	int cantEquipos = mProjectsAmount.length; //TODO esto es asi ?
-    	
     	porcentajeSprintsFallidos = sprintFallidos / cantSprintsFinal* 100;
 	    porcentajeSprintsOciosos = sprintOciosos / cantSprintsFinal * 100;
 	    promedioPuntosSobrantesPorSprintYEquipo = puntosSobrantes / (cantSprintsFinal * cantEquipos);
@@ -135,14 +153,15 @@ public class SimulationInstance {
 	    porcentajeQaNoCompletaComun = noCompletaComun / cantSprintsFinal * 100;
 	    porcentajeQaOcioso = qaOcioso / cantSprintsFinal * 100;
     }
-    private void imprimir(){
-    	System.out.println(": " + porcentajeSprintsFallidos);
-    	System.out.println(": " + porcentajeSprintsOciosos);
-    	System.out.println(": "+ promedioPuntosSobrantesPorSprintYEquipo);
-    	System.out.println(": "+ promedioPuntosFaltantesPorSprintYEquipo);
-    	System.out.println(": "+ porcentajeQaNoCompletaPrioridad);
-    	System.out.println(": "+ porcentajeQaNoCompletaComun);
+    
+    public void imprimir(){
+    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos de prioridad: "+ porcentajeQaNoCompletaPrioridad);
+    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos: "+ porcentajeQaNoCompletaComun);
+    	System.out.println("Porcentaje de veces que algún equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
+    	System.out.println("Porcentaje de veces que el equipo del proyecto estuvo ocioso: " + porcentajeSprintsOciosos);
     	System.out.println(": "+ porcentajeQaOcioso);
+    	System.out.println("Promedio de sobrante de horas de QA: "+ promedioPuntosSobrantesPorSprintYEquipo);
+    	System.out.println("Promedio de faltante de horas de QA: "+ promedioPuntosFaltantesPorSprintYEquipo);
     }
     
     public static class Builder {

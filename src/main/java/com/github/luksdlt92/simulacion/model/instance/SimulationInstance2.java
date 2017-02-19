@@ -1,7 +1,10 @@
 package com.github.luksdlt92.simulacion.model.instance;
 
+import com.github.luksdlt92.simulacion.constant.TechnologyEnum;
+
 /*
- * Es igual que SimulationInstance pero usar Developer, EquipoQA, SimulationResults
+ * SimulationInstance: es la transcripcion tal cual del diagrama, al estilo Alfiero
+ * SimulationInstance2: algo más civilizada, no al estilo Alfiero
  */
 public class SimulationInstance2 {
 	
@@ -17,8 +20,7 @@ public class SimulationInstance2 {
     private int deltaT = 0;
     private final SimulationResults results;
     
-    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10;
-
+    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
     
     private SimulationInstance2(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal) {
         this.mQAPeopleAmount = peopleAmount;
@@ -26,20 +28,6 @@ public class SimulationInstance2 {
         this.mTechnologySeniorities = technologySeniorities;
         this.cantSprintsFinal = cantSprintsFinal;
         this.results = new SimulationResults(this);
-    }
-    
-    public enum TechEnum {
-    	ANDROID(0),
-    	IOS(1),
-    	WEB(0);
-    	
-    	private int id;
-    	TechEnum(int id){
-    		this.id=id;
-    	}
-    	public int getId(){
-    		return this.id;
-    	}
     }
     
     public void run() {
@@ -52,11 +40,12 @@ public class SimulationInstance2 {
         	
         	this.results.setAlgunEquipoFallo(Boolean.FALSE);
         	
-        	for(TechEnum unaTecnologia : TechEnum.values()){
+        	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
         		for (int iProject = 0; iProject < this.mProjectsAmount[unaTecnologia.getId()]; iProject++) {
             		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[unaTecnologia.getId()].length; iSeniority++) {
             			
-            			//TODO sacar la instanciacion de los for oooo todos moriremos
+            			//TODO sacar la instanciacion de los for oooo todos moriremos. Crear lista en inicializar() y recorrerla
+            			//Parametrizar el porcentaje de c/tech: ANDROID_PORCENTAJE_PRIORIDAD
             			Developer dev = new Developer(this, iProject, unaTecnologia.getId(), iSeniority, ANDROID_PORCENTAJE_PRIORIDAD);
             			dev.desarrollar();
             			
@@ -72,7 +61,7 @@ public class SimulationInstance2 {
 //        		}
 //        	}
         	
-        	EquipoQA qa = new EquipoQA(this);//SACAR instanciacion DEL WHILE TODO
+        	EquipoQA qa = new EquipoQA(this);//SACAR instanciacion DEL WHILE. Poner como var de inst y en iniciarlizar() TODO
         	qa.test();
         	
         	if( this.results.isAlgunEquipoFallo() ){

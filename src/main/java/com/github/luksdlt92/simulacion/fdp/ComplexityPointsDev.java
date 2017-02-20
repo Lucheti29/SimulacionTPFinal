@@ -2,7 +2,7 @@ package com.github.luksdlt92.simulacion.fdp;
 
 public class ComplexityPointsDev {
 
-    public static double getEstimatedPointsPerSprint(int technology) {
+    public static double getEstimatedPointsPerSprint(int technology, int seniority) {
         return 0;
     }
 

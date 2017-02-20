@@ -46,11 +46,12 @@ public class SimulationInstance2 {
         	// Se calculan los puntos a estimar por cada equipo y cuánto efectivamente hicieron
 			// Luego se actualiza CPD para calcular los resultados
         	for (int technology : this.teamsPerTech.keySet()) {
+				int i = 0;
 				for (Team team : this.teamsPerTech.get(technology)) {
-					int i = 0;
 					this.CPD[technology][i] = team.estimateSprint(); // Se setean los puntos estimados
 					this.CPD[technology][i] = this.CPD[technology][i] - team.developSprint(); // Se restan los puntos hechos
 					team.cleanUp();
+					i++;
 				}
 			}
 

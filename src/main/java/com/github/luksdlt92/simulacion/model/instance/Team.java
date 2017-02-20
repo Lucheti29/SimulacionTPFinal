@@ -24,7 +24,7 @@ public class Team {
      * Calcula los puntos estimados por el equipo para el sprint
      * Tiene que llamarse por cada sprint
      */
-    public void estimateSprint() {
+    public int estimateSprint() {
         // for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
@@ -32,13 +32,15 @@ public class Team {
                 estimatedPoints += ComplexityPointsDev.getEstimatedPointsPerSprint(technology, seniority);
             }
         }
+
+        return estimatedPoints;
     }
 
     /**
      * Calcula los puntos efectivamente hechos por el equipo para el sprint
      * Tiene que llamarse por cada sprint, después de estimateSprint preferentemente
      */
-    public void developSprint() {
+    public int developSprint() {
         // for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
@@ -49,6 +51,8 @@ public class Team {
                 }
             }
         }
+
+        return developedPoints;
     }
 
     /**
@@ -58,13 +62,5 @@ public class Team {
     public void cleanUp() {
         estimatedPoints = 0;
         developedPoints = 0;
-    }
-
-    public int getEstimatedPoints() {
-        return estimatedPoints;
-    }
-
-    public int getDevelopedPoints() {
-        return developedPoints;
     }
 }

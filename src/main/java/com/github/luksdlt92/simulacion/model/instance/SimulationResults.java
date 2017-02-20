@@ -56,6 +56,7 @@ public class SimulationResults {
 	public boolean isAlgunEquipoOcioso() {
 		return algunEquipoOcioso;
 	}
+
 	public void setAlgunEquipoOcioso(boolean algunEquipoOcioso) {
 		this.algunEquipoOcioso = algunEquipoOcioso;
 	}
@@ -63,6 +64,7 @@ public class SimulationResults {
 	public int getPuntosNoCumplidos() {
 		return puntosNoCumplidos;
 	}
+
 	public void sumarPuntosNoCumplidos(int puntosNoCumplidos){
 		this.puntosNoCumplidos += puntosNoCumplidos;
 	}
@@ -70,6 +72,7 @@ public class SimulationResults {
 	public int getPuntosSobrantes() {
 		return puntosSobrantes;
 	}
+
 	public void sumarPuntosSobrantes(int puntosSobrantes) {
 		this.puntosSobrantes += puntosSobrantes;
 	}
@@ -77,6 +80,7 @@ public class SimulationResults {
 	public int getPuntosNoProbados() {
 		return puntosNoProbados;
 	}
+
 	public void sumarPuntosNoProbados(int puntosNoProbados) {
 		this.puntosNoProbados += puntosNoProbados;
 	}
@@ -84,6 +88,7 @@ public class SimulationResults {
 	public int getNoCompletaPrioridad() {
 		return noCompletaPrioridad;
 	}
+
 	public void increaseNoCompletaPrioridad(){
 		this.noCompletaPrioridad ++;
 	}
@@ -91,6 +96,7 @@ public class SimulationResults {
 	public int getNoCompletaComun() {
 		return noCompletaComun;
 	}
+
 	public void increaseNoCompletaComun(){
 		this.noCompletaComun ++;
 	}
@@ -98,6 +104,7 @@ public class SimulationResults {
 	public int getQaOcioso() {
 		return qaOcioso;
 	}
+
 	public void increaseQaOcioso(){
 		this.qaOcioso ++;
 	}
@@ -105,6 +112,7 @@ public class SimulationResults {
 	public double getPuntosSobrantesQa() {
 		return puntosSobrantesQa;
 	}
+
 	public void sumarPuntosSobrantesQa(double puntosSobrantesQa){
 		this.puntosSobrantesQa++;
 	}
@@ -112,6 +120,7 @@ public class SimulationResults {
 	public int getSprintFallidos() {
 		return sprintFallidos;
 	}
+
 	public void increaseSprintFallidos(){
 		this.sprintFallidos++;
 	}
@@ -119,6 +128,7 @@ public class SimulationResults {
 	public int getSprintOciosos() {
 		return sprintOciosos;
 	}
+
 	public void increaseSprintOciosos(){
 		this.sprintOciosos++;
 	}

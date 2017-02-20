@@ -3,8 +3,7 @@ package com.github.luksdlt92.simulacion.model.instance;
 import com.github.luksdlt92.simulacion.constant.Seniority;
 import com.github.luksdlt92.simulacion.constant.TechnologyEnum;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /*
  * SimulationInstance: es la transcripcion tal cual del diagrama, al estilo Alfiero
@@ -12,7 +11,7 @@ import java.util.List;
  */
 public class SimulationInstance2 {
 
-	private static final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
+	private static final double PORCENTAJE_DE_PRIORIDAD = 0.1;
 	private static final int HOURS_DEV_WORK_PER_DAY = 6;
 
 	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
@@ -26,7 +25,7 @@ public class SimulationInstance2 {
     private int deltaT = 0;
     private final SimulationResults results;
 
-    private List<Team> teams = new LinkedList<Team>();
+    private final Map<Integer, List<Team>> teamsPerTech = new HashMap<Integer, List<Team>>();
 
     private SimulationInstance2(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal) {
         this.qaPeopleAmount = peopleAmount;
@@ -40,32 +39,51 @@ public class SimulationInstance2 {
         System.out.println("Inicializando simulacion");
         init();
 
-		System.out.println("Running");
-        while(deltaT <= cantSprintsFinal){
+		System.out.println("Corriendo simulacion");
+        while (deltaT <= cantSprintsFinal) {
         	deltaT++;
-        	
-        	this.results.setAlgunEquipoFallo(Boolean.FALSE);
-        	
-        	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
-        		for (int iProject = 0; iProject < this.projectsAmount[unaTecnologia.getId()]; iProject++) {
-            		for (int iSeniority = 0; iSeniority < this.technologySeniorities[unaTecnologia.getId()].length; iSeniority++) {
-            			
-            			//TODO sacar la instanciacion de los for oooo todos moriremos. Crear lista en init() y recorrerla
-            			//Parametrizar el porcentaje de c/tech: ANDROID_PORCENTAJE_PRIORIDAD
-            			Developer dev = new Developer(this, iProject, unaTecnologia.getId(), iSeniority, ANDROID_PORCENTAJE_PRIORIDAD);
-            			dev.desarrollar();
-            			
-            		}
-            	}
-        	}
-    		
-//        	for (int iProject = 0; iProject < this.projectsAmount[Technology.ANDROID]; iProject++) {
-//        		for (int iSeniority = 0; iSeniority < this.technologySeniorities[Technology.ANDROID].length; iSeniority++) {
-//        			//TODO sacar la instanciacion de los for oooo todos moriremos
-//        			Developer dev = new Developer(this, iProject, Technology.ANDROID, iSeniority, ANDROID_PORCENTAJE_PRIORIDAD);
-//        			dev.desarrollar();
-//        		}
-//        	}
+
+        	// Se calculan los puntos a estimar por cada equipo y cuánto efectivamente hicieron
+			// Luego se actualiza CPD para calcular los resultados
+        	for (int technology : this.teamsPerTech.keySet()) {
+				int i = 0;
+				for (Team team : this.teamsPerTech.get(technology)) {
+					this.CPD[technology][i] = team.estimateSprint(); // Se setean los puntos estimados
+					this.CPD[technology][i] = this.CPD[technology][i] - team.developSprint(); // Se restan los puntos hechos
+					team.cleanUp();
+					i++;
+				}
+			}
+
+			// Se procesan los datos del CPD para empezar a obtener resultados
+			// for each technology
+			for (int technology = 0; technology < this.CPD.length; technology++) {
+        		// for each team
+				for (int team = 0; team < this.CPD[technology].length; team++) {
+					int pointsPerTeam = 0;
+
+					// Se calcula si hubo puntos sobrantes o no
+					if (this.CPD[technology][team] > 0) {
+						setAlgunEquipoFallo(Boolean.TRUE);
+						sumarPuntosNoCumplidos(this.CPD[technology][team]);
+					} else if (this.CPD[technology][team] < 0) {
+						setAlgunEquipoOcioso(Boolean.TRUE);
+						// Al hacer la resta de estimados menos hechos
+						// Si hay más hechos, el número es negativo
+						// Por ende, es necesario multiplicarlo por -1
+						sumarPuntosSobrantes(this.CPD[technology][team] * -1);
+						pointsPerTeam = this.CPD[technology][team];
+						this.CPD[technology][team] = 0;
+					}
+
+					// Se destinan los puntos a los stocks de QA
+					if (Math.random() < PORCENTAJE_DE_PRIORIDAD) {
+						sumarCPP(pointsPerTeam);
+					} else {
+						sumarCP(pointsPerTeam);
+					}
+				}
+			}
         	
         	EquipoQA qa = new EquipoQA(this);//SACAR instanciacion DEL WHILE. Poner como var de inst y en iniciarlizar() TODO
         	qa.test();
@@ -85,14 +103,15 @@ public class SimulationInstance2 {
     
     private void init() {
     	// Inicialización de las variables de estado
-		CPP = 0;
-		CP = 0;
-		CPD = new int[3][]; // El 3 es por las tecnologías
+		this.CPP = 0;
+		this.CP = 0;
+		this.CPD = new int[3][]; // El 3 es por las tecnologías
 
     	// ---------- Teams init ----------
     	// for each technology
     	for (int technology = 0; technology < projectsAmount.length; technology++) {
     		int projectsPerTech = 0;
+    		List<Team> teams = new LinkedList<Team>();
     		// for project
     		for (int i = 0; i < projectsAmount[technology]; i++) {
 				projectsPerTech++;
@@ -101,7 +120,8 @@ public class SimulationInstance2 {
 						technologySeniorities[technology][Seniority.JUNIOR],
 						HOURS_DEV_WORK_PER_DAY));
 			}
-			CPD[technology] = new int[projectsPerTech]; // Recién acá tenemos la cantidad de proyectos por tecnología
+			this.teamsPerTech.put(technology, teams);
+			this.CPD[technology] = new int[projectsPerTech]; // Recién acá tenemos la cantidad de proyectos por tecnología
 		}
 		// ---------- End Teams init ----------
     }

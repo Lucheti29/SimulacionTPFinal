@@ -1,49 +1,56 @@
 package com.github.luksdlt92.simulacion.model.instance;
 
+import com.github.luksdlt92.simulacion.constant.Seniority;
 import com.github.luksdlt92.simulacion.constant.TechnologyEnum;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /*
  * SimulationInstance: es la transcripcion tal cual del diagrama, al estilo Alfiero
  * SimulationInstance2: algo más civilizada, no al estilo Alfiero
  */
 public class SimulationInstance2 {
+
+	private static final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
+	private static final int HOURS_DEV_WORK_PER_DAY = 6;
+
+	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
+	private int CP; // Cantidad de puntos de complejidad a probar por QA
+	private int CPD[][]; // Cantidad de puntos de complejidad a desarrollar por equipo
 	
-	private int CPP;//Cantidad de puntos de complejidad con prioridad a probar por QA
-	private int CP; //Cantidad de puntos de complejidad a probar por QA
-	private int CPD[][]; //Cantidad de puntos de complejidad a desarrollar por equipo
-	
-	private final int mQAPeopleAmount; //Equipo de QA
-    private final int[] mProjectsAmount; //[technology]
-    private final int[][] mTechnologySeniorities; //[technology][seniority]
+	private final int qaPeopleAmount; //Equipo de QA
+    private final int[] projectsAmount; //[technology]
+    private final int[][] technologySeniorities; //[technology][seniority]
     private final int cantSprintsFinal; //TODO agregar a las opciones 
     private int deltaT = 0;
     private final SimulationResults results;
-    
-    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
-    
+
+    private List<Team> teams = new LinkedList<Team>();
+
     private SimulationInstance2(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal) {
-        this.mQAPeopleAmount = peopleAmount;
-        this.mProjectsAmount = projectsAmount;
-        this.mTechnologySeniorities = technologySeniorities;
+        this.qaPeopleAmount = peopleAmount;
+        this.projectsAmount = projectsAmount;
+        this.technologySeniorities = technologySeniorities;
         this.cantSprintsFinal = cantSprintsFinal;
         this.results = new SimulationResults(this);
     }
     
     public void run() {
-        System.out.println("Running");
-        
-        inicializar(); //TODO
-        
+        System.out.println("Inicializando simulacion");
+        init();
+
+		System.out.println("Running");
         while(deltaT <= cantSprintsFinal){
         	deltaT++;
         	
         	this.results.setAlgunEquipoFallo(Boolean.FALSE);
         	
         	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
-        		for (int iProject = 0; iProject < this.mProjectsAmount[unaTecnologia.getId()]; iProject++) {
-            		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[unaTecnologia.getId()].length; iSeniority++) {
+        		for (int iProject = 0; iProject < this.projectsAmount[unaTecnologia.getId()]; iProject++) {
+            		for (int iSeniority = 0; iSeniority < this.technologySeniorities[unaTecnologia.getId()].length; iSeniority++) {
             			
-            			//TODO sacar la instanciacion de los for oooo todos moriremos. Crear lista en inicializar() y recorrerla
+            			//TODO sacar la instanciacion de los for oooo todos moriremos. Crear lista en init() y recorrerla
             			//Parametrizar el porcentaje de c/tech: ANDROID_PORCENTAJE_PRIORIDAD
             			Developer dev = new Developer(this, iProject, unaTecnologia.getId(), iSeniority, ANDROID_PORCENTAJE_PRIORIDAD);
             			dev.desarrollar();
@@ -52,8 +59,8 @@ public class SimulationInstance2 {
             	}
         	}
     		
-//        	for (int iProject = 0; iProject < this.mProjectsAmount[Technology.ANDROID]; iProject++) {
-//        		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[Technology.ANDROID].length; iSeniority++) {
+//        	for (int iProject = 0; iProject < this.projectsAmount[Technology.ANDROID]; iProject++) {
+//        		for (int iSeniority = 0; iSeniority < this.technologySeniorities[Technology.ANDROID].length; iSeniority++) {
 //        			//TODO sacar la instanciacion de los for oooo todos moriremos
 //        			Developer dev = new Developer(this, iProject, Technology.ANDROID, iSeniority, ANDROID_PORCENTAJE_PRIORIDAD);
 //        			dev.desarrollar();
@@ -76,73 +83,47 @@ public class SimulationInstance2 {
     }
     
     
-    private void inicializar(){ //TODO
-    }
-    
-    public static class Builder {
-    	
-    	private int cantSprintsFinal;
-        private int mQAPeopleAmount;
-        private int[] mProjectsAmount = new int[3];
-        private int[][] mTechnologySeniorities = new int[3][3];
+    private void init() {
+    	// Inicialización de las variables de estado
+		CPP = 0;
+		CP = 0;
+		CPD = new int[3][]; // El 3 es por las tecnologías
 
-        private Builder() {}
-
-        public static Builder newInstance() {
-            return new Builder();
-        }
-
-        public Builder setQAPeopleAmount(int peopleAmount) {
-            this.mQAPeopleAmount = peopleAmount;
-            return this;
-        }
-
-        public Builder setProjectsAmount(int technology, int projectsAmount) {
-            this.mProjectsAmount[technology] = projectsAmount;
-            return this;
-        }
-
-        public Builder setSeniorityAmount(int technology, int seniority, int amount) {
-            this.mTechnologySeniorities[technology][seniority] = amount;
-            return this;
-        }
-
-        public SimulationInstance2 build() {
-            System.out.println("La cantidad de gente de QA es " + this.mQAPeopleAmount);
-
-            for (int i = 0; i < this.mProjectsAmount.length; i++) {
-                System.out.println("En la tecnologia " + i + " hay " + this.mProjectsAmount[i]);
-            }
-
-        	
-            for (int i = 0; i < this.mTechnologySeniorities.length; i++) {
-                for (int i2 = 0; i2 < this.mTechnologySeniorities[i].length; i2++) {
-                    System.out.println("En la tecnologia " + i + " hay " + this.mTechnologySeniorities[i][i2] + " de nivel " + i2);
-                }
-            }
-
-            return new SimulationInstance2(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal);
-        }
+    	// ---------- Teams init ----------
+    	// for each technology
+    	for (int technology = 0; technology < projectsAmount.length; technology++) {
+    		int projectsPerTech = 0;
+    		// for project
+    		for (int i = 0; i < projectsAmount[technology]; i++) {
+				projectsPerTech++;
+				teams.add(new Team(technology, technologySeniorities[technology][Seniority.SENIOR],
+						technologySeniorities[technology][Seniority.SEMISENIOR],
+						technologySeniorities[technology][Seniority.JUNIOR],
+						HOURS_DEV_WORK_PER_DAY));
+			}
+			CPD[technology] = new int[projectsPerTech]; // Recién acá tenemos la cantidad de proyectos por tecnología
+		}
+		// ---------- End Teams init ----------
     }
 
-	public int getmQAPeopleAmount() {
-		return this.mQAPeopleAmount;
+	public int getQAPeopleAmount() {
+		return this.qaPeopleAmount;
 	}
-	public int[] getmProjectsAmount() {
-		return this.mProjectsAmount;
+	public int[] getProjectsAmount() {
+		return this.projectsAmount;
 	}
-	public int[][] getmTechnologySeniorities() {
-		return this.mTechnologySeniorities;
+	public int[][] getTechnologySeniorities() {
+		return this.technologySeniorities;
 	}
     public int getCantEquipos() {
     	int cantEquipos = 0;
     	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
-    		cantEquipos += this.mProjectsAmount[unaTecnologia.getId()];
+    		cantEquipos += this.projectsAmount[unaTecnologia.getId()];
     	}
 		return cantEquipos;
 	}
     public int getCantEquipos(int iTech) {
-    	int cantEquipos = this.mProjectsAmount[ iTech ];
+    	int cantEquipos = this.projectsAmount[ iTech ];
 		return cantEquipos;
 	}
     
@@ -229,5 +210,51 @@ public class SimulationInstance2 {
 	
 	public void sumarPuntosSobrantesQa(double puntos){
 		this.results.sumarPuntosSobrantesQa(puntos);
+	}
+
+	public static class Builder {
+
+		private int cantSprintsFinal;
+		private int mQAPeopleAmount;
+		private int[] mProjectsAmount = new int[3];
+		private int[][] mTechnologySeniorities = new int[3][3];
+
+		private Builder() {}
+
+		public static Builder newInstance() {
+			return new Builder();
+		}
+
+		public Builder setQAPeopleAmount(int peopleAmount) {
+			this.mQAPeopleAmount = peopleAmount;
+			return this;
+		}
+
+		public Builder setProjectsAmount(int technology, int projectsAmount) {
+			this.mProjectsAmount[technology] = projectsAmount;
+			return this;
+		}
+
+		public Builder setSeniorityAmount(int technology, int seniority, int amount) {
+			this.mTechnologySeniorities[technology][seniority] = amount;
+			return this;
+		}
+
+		public SimulationInstance2 build() {
+			System.out.println("La cantidad de gente de QA es " + this.mQAPeopleAmount);
+
+			for (int i = 0; i < this.mProjectsAmount.length; i++) {
+				System.out.println("En la tecnologia " + i + " hay " + this.mProjectsAmount[i]);
+			}
+
+
+			for (int i = 0; i < this.mTechnologySeniorities.length; i++) {
+				for (int i2 = 0; i2 < this.mTechnologySeniorities[i].length; i2++) {
+					System.out.println("En la tecnologia " + i + " hay " + this.mTechnologySeniorities[i][i2] + " de nivel " + i2);
+				}
+			}
+
+			return new SimulationInstance2(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal);
+		}
 	}
 }

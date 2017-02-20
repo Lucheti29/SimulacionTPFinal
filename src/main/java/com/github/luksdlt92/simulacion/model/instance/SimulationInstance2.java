@@ -50,6 +50,7 @@ public class SimulationInstance2 {
 					int i = 0;
 					this.CPD[technology][i] = team.estimateSprint(); // Se setean los puntos estimados
 					this.CPD[technology][i] = this.CPD[technology][i] - team.developSprint(); // Se restan los puntos hechos
+					team.cleanUp();
 				}
 			}
 

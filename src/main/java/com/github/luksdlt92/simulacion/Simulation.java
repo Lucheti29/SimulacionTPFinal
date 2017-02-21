@@ -18,8 +18,10 @@ public class Simulation {
         System.out.println("Queres cargar un escenario para realizar la simulacion? (S/N)");
         SimulationInstance simulation = mReader.readLine().equalsIgnoreCase("s") ? useParser() : useConsole();
 
-        if (simulation != null) simulation.run();
-        else System.out.print("Algo salio mal!");
+        if (simulation != null) 
+        	simulation.run();
+        else 
+        	System.out.print("Algo salio mal!");
     }
 
     private static SimulationInstance useConsole() {

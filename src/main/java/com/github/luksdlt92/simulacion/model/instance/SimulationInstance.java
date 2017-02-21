@@ -1,9 +1,14 @@
 package com.github.luksdlt92.simulacion.model.instance;
 
-import com.github.luksdlt92.simulacion.constant.Seniority;
-import com.github.luksdlt92.simulacion.fdp.ComplexityPointsQA;
+import java.io.FileWriter;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
-import java.util.*;
+import com.github.luksdlt92.simulacion.constant.Seniority;
+import com.github.luksdlt92.simulacion.csv.CSVUtil;
+import com.github.luksdlt92.simulacion.fdp.ComplexityPointsQA;
 
 public class SimulationInstance {
 
@@ -11,11 +16,12 @@ public class SimulationInstance {
 	private static final int HOURS_DEV_WORK_PER_DAY = 6;
 	private static final int HOURS_QA_WORK_PER_DAY = 8;
 	private static final int SPRINTS = 10000;
-
+	
 	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
 	private int CP; // Cantidad de puntos de complejidad a probar por QA
 	private int CPD[][]; // Cantidad de puntos de complejidad a desarrollar por equipo
 	
+	private final int stageId;
 	private final int qaPeopleAmount; //Equipo de QA
     private final int[] projectsAmount; //[technology]
     private final int[][] technologySeniorities; //[technology][seniority]
@@ -25,12 +31,13 @@ public class SimulationInstance {
 
     private final Map<Integer, List<Team>> teamsPerTech = new HashMap<Integer, List<Team>>();
 
-    private SimulationInstance(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal) {
+    private SimulationInstance(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal, int stageId) {
         this.qaPeopleAmount = peopleAmount;
         this.projectsAmount = projectsAmount;
         this.technologySeniorities = technologySeniorities;
         this.cantSprintsFinal = SPRINTS; // TODO: cambiar por algo configurable
         this.results = new SimulationResults(this);
+        this.stageId = stageId;
     }
 
     public void run() {
@@ -70,6 +77,10 @@ public class SimulationInstance {
 	}
     
     private void simulate() {
+    	
+    	// ---------- Open CSV ----------
+    	FileWriter writer = CSVUtil.openCsv(this.stageId);
+    	
         while (deltaT <= cantSprintsFinal) {
         	deltaT++;
 
@@ -79,8 +90,8 @@ public class SimulationInstance {
         	for (int technology : this.teamsPerTech.keySet()) {
 				int i = 0;
 				for (Team team : this.teamsPerTech.get(technology)) {
-					this.CPD[technology][i] = team.estimateSprint(); // Se setean los puntos estimados
-					this.CPD[technology][i] = this.CPD[technology][i] - team.developSprint(); // Se restan los puntos hechos
+					this.CPD[technology][i] += team.estimateSprint(); // Se setean los puntos estimados
+					this.CPD[technology][i] -= team.developSprint(); // Se restan los puntos hechos
 					team.cleanUp();
 					i++;
 				}
@@ -162,7 +173,16 @@ public class SimulationInstance {
 			this.CPP = 0;
         	this.CP = 0;
 			// ---------- End QA ----------
+        
+        	// ---------- Start Write Line CSV ----------
+        	this.results.calcularResultados();
+        	CSVUtil.writeLine(writer, this.deltaT, this.results);
+        	// ---------- End Write Line CSV ----------
         }
+        
+        // ---------- Close CSV ----------
+        CSVUtil.closeCsv(writer);
+        // ---------- Close CSV ----------
     }
 
     private void results() {
@@ -229,6 +249,7 @@ public class SimulationInstance {
 
 	public static class Builder {
 
+		private int stageId;
 		private int cantSprintsFinal;
 		private int mQAPeopleAmount;
 		private int[] mProjectsAmount = new int[3];
@@ -240,6 +261,11 @@ public class SimulationInstance {
 			return new Builder();
 		}
 
+		public Builder setStageId(int stageId) {
+			this.stageId = stageId;
+			return this;
+		}
+		
 		public Builder setQAPeopleAmount(int peopleAmount) {
 			this.mQAPeopleAmount = peopleAmount;
 			return this;
@@ -269,7 +295,7 @@ public class SimulationInstance {
 				}
 			}
 
-			return new SimulationInstance(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal);
+			return new SimulationInstance(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal, this.stageId);
 		}
 	}
 }

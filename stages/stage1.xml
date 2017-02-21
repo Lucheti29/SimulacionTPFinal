@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <stage>
+	<id>1</id>
 	<qapeople>10</qapeople>
 	
 	<technology name="android">

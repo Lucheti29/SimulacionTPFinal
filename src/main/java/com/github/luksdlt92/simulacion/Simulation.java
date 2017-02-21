@@ -28,6 +28,9 @@ public class Simulation {
         try {
             SimulationInstance.Builder builder = SimulationInstance.Builder.newInstance();
 
+            System.out.println("Ingrese ID o Numero del Escenario a simular");
+            builder.setStageId(Integer.valueOf(mReader.readLine()));
+            
             System.out.println("Ingresa la cantidad de personas en QA");
             builder.setQAPeopleAmount(Integer.valueOf(mReader.readLine()));
 

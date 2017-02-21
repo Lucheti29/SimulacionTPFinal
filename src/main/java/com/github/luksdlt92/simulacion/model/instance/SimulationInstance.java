@@ -1,234 +1,275 @@
 package com.github.luksdlt92.simulacion.model.instance;
 
-import com.github.luksdlt92.simulacion.constant.TechnologyEnum;
-import com.github.luksdlt92.simulacion.fdp.ComplexityPointsDev;
+import com.github.luksdlt92.simulacion.constant.Seniority;
 import com.github.luksdlt92.simulacion.fdp.ComplexityPointsQA;
 
-/*
- * SimulationInstance: es la transcripcion tal cual del diagrama, al estilo Alfiero
- * SimulationInstance2: algo más civilizada
- */
+import java.util.*;
+
 public class SimulationInstance {
+
+	private static final double PORCENTAJE_DE_PRIORIDAD = 0.1;
+	private static final int HOURS_DEV_WORK_PER_DAY = 6;
+	private static final int HOURS_QA_WORK_PER_DAY = 8;
+	private static final int SPRINTS = 10000;
+
+	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
+	private int CP; // Cantidad de puntos de complejidad a probar por QA
+	private int CPD[][]; // Cantidad de puntos de complejidad a desarrollar por equipo
 	
-	private int CPP;//Cantidad de puntos de complejidad con prioridad a probar por QA
-	private int CP; //Cantidad de puntos de complejidad a probar por QA
-	private int CPD[][]; //Cantidad de puntos de complejidad a desarrollar por equipo
-	
-	private final int cantSprintsFinal = 100000; //TODO agregar a las opciones 
-	
-	private final int mQAPeopleAmount; //Equipo de QA
-    private final int[] mProjectsAmount; //[technology]
-    private final int[][] mTechnologySeniorities; //[technology][seniority]
-    
+	private final int qaPeopleAmount; //Equipo de QA
+    private final int[] projectsAmount; //[technology]
+    private final int[][] technologySeniorities; //[technology][seniority]
+    private final int cantSprintsFinal; //TODO agregar a las opciones 
     private int deltaT = 0;
-    private boolean algunEquipoFallo = Boolean.FALSE;
-    private boolean algunEquipoOcioso = Boolean.FALSE;
-    private int puntosNoCumplidos = 0;
-    private int puntosSobrantes = 0;
-    private int puntosNoProbados = 0;
-    private int noCompletaPrioridad = 0;
-    private int noCompletaComun = 0;
-    private int qaOcioso = 0;
-	private double puntosSobrantesQa = 0;
-	private int sprintFallidos = 0;
-	private int sprintOciosos = 0;
-	
-    private final double ANDROID_PORCENTAJE_PRIORIDAD = 10; //TODO
-    
-    //Resultados
-    private double porcentajeSprintsFallidos = 0;
-    private double porcentajeSprintsOciosos = 0;
-    private double promedioPuntosSobrantesPorSprintYEquipo = 0;
-    private double promedioPuntosFaltantesPorSprintYEquipo = 0;
-    private double porcentajeQaNoCompletaPrioridad = 0;
-    private double porcentajeQaNoCompletaComun = 0;
-    private double porcentajeQaOcioso = 0;
+    private final SimulationResults results;
 
-    private SimulationInstance(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities) {
-        this.mQAPeopleAmount = peopleAmount;
-        this.mProjectsAmount = projectsAmount;
-        this.mTechnologySeniorities = technologySeniorities;
+    private final Map<Integer, List<Team>> teamsPerTech = new HashMap<Integer, List<Team>>();
+
+    private SimulationInstance(int peopleAmount, int[] projectsAmount, int[][] technologySeniorities, int cantSprintsFinal) {
+        this.qaPeopleAmount = peopleAmount;
+        this.projectsAmount = projectsAmount;
+        this.technologySeniorities = technologySeniorities;
+        this.cantSprintsFinal = SPRINTS; // TODO: cambiar por algo configurable
+        this.results = new SimulationResults(this);
     }
-    
+
     public void run() {
-        System.out.println("Running");
-        
-        inicializar();
-        
-        while(deltaT <= cantSprintsFinal){
+		System.out.println("Inicializando simulacion");
+		init();
+
+		System.out.println("Corriendo simulacion");
+		simulate();
+
+		System.out.println("Resultados");
+		results();
+	}
+
+	private void init() {
+		// Inicialización de las variables de estado
+		this.CPP = 0;
+		this.CP = 0;
+		this.CPD = new int[3][]; // El 3 es por las tecnologías
+
+		// ---------- Teams init ----------
+		// for each technology
+		for (int technology = 0; technology < projectsAmount.length; technology++) {
+			int projectsPerTech = 0;
+			List<Team> teams = new LinkedList<Team>();
+			// for project
+			for (int i = 0; i < projectsAmount[technology]; i++) {
+				projectsPerTech++;
+				teams.add(new Team(technology, technologySeniorities[technology][Seniority.SENIOR],
+						technologySeniorities[technology][Seniority.SEMISENIOR],
+						technologySeniorities[technology][Seniority.JUNIOR],
+						HOURS_DEV_WORK_PER_DAY));
+			}
+			this.teamsPerTech.put(technology, teams);
+			this.CPD[technology] = new int[projectsPerTech]; // Recién acá tenemos la cantidad de proyectos por tecnología
+		}
+		// ---------- End Teams init ----------
+	}
+    
+    private void simulate() {
+        while (deltaT <= cantSprintsFinal) {
         	deltaT++;
-        	
-        	algunEquipoFallo = Boolean.FALSE;
-        	
-        	for(TechnologyEnum aTechnology : TechnologyEnum.values()){
-        		for (int iProject = 0; iProject < this.mProjectsAmount[aTechnology.getId()]; iProject++) {
-            		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[aTechnology.getId()].length; iSeniority++) {
-            			
-            			//TODO Parametrizar el porcentaje de c/tech: ANDROID_PORCENTAJE_PRIORIDAD
-            			desarrollo(iSeniority, aTechnology.getId(), ANDROID_PORCENTAJE_PRIORIDAD); 
-            		
-            		}
-        		}
-        	}
-        	
-//        	for (int iProject = 0; iProject < this.mProjectsAmount[Technology.ANDROID]; iProject++) {
-//        		for (int iSeniority = 0; iSeniority < this.mTechnologySeniorities[Technology.ANDROID].length; iSeniority++) {
-//        			desarrollo(iSeniority);
-//        		}
-//        	}
-        	pruebaQa();
-        }
-        
-        calcularResultados();
-        imprimir();
-    }
-    
-    private void inicializar(){ //TODO
-    	
-    }
-    
-    private void desarrollo(int iSeniority, int iTechnology, double techPorcentajePrioridad){
-    	double IPD = ComplexityPointsDev.getEstimatedPointsPerSprint(iTechnology);
-    	CPD[iTechnology][iSeniority] += IPD;
-    	
-    	double DP = ComplexityPointsDev.getCompletedPointsPerHour(iTechnology, iSeniority);
-    	CPD[iTechnology][iSeniority] -= DP;
-    	
-    	if(CPD[iTechnology][iSeniority] > 0){
-    		algunEquipoFallo = Boolean.TRUE;
-    		puntosNoCumplidos += CPD[iTechnology][iSeniority];
-    	}
-    	if(CPD[iTechnology][iSeniority] < 0){
-    		algunEquipoOcioso = Boolean.TRUE;
-    		puntosSobrantes += CPD[iTechnology][iSeniority];
-    		DP -= CPD[iTechnology][iSeniority];
-    		CPD[iTechnology][iSeniority] = 0;
-    	}
-    	
-    	double R = Math.random();
-    	if(R > techPorcentajePrioridad)
-    		CP += DP;
-    	else
-    		CPP += DP;
-    }
-    
-    private void pruebaQa(){
-    	double PPD = ComplexityPointsQA.getPointsTestedPerHour();
-    	CPP -= PPD;
-    	
-    	if(CPP>0){//No completaron puntos prioritarios
-    		noCompletaPrioridad++;
-    		puntosNoProbados += CPP + CP;
-    		if(CP > 0)
-    			noCompletaComun++;
-    	} else {
-    		PPD = -CPP;
-    		CP -= PPD;
-    		
-    		if(CP>0){ //No completaron puntos comunes
-    			noCompletaComun++;
-    			puntosNoProbados+=CP;
-    		} else if(CP<0) {
-    			qaOcioso++;
-    			puntosSobrantesQa += -CP;
-    			//Cantidad mayor a una hora TODO
-    		}
-    	}
-    	
-    	if(algunEquipoFallo){
-    		sprintFallidos++;
-    	}
-    	if(algunEquipoOcioso){
-    		sprintOciosos++;
-    	}
-    }
-    
-    private void calcularResultados(){
-    	porcentajeSprintsFallidos = sprintFallidos / cantSprintsFinal* 100;
-	    porcentajeSprintsOciosos = sprintOciosos / cantSprintsFinal * 100;
-	    promedioPuntosSobrantesPorSprintYEquipo = puntosSobrantes / (cantSprintsFinal * this.getCantEquipos());
-	    promedioPuntosFaltantesPorSprintYEquipo = puntosNoCumplidos / (cantSprintsFinal * this.getCantEquipos());
-	    porcentajeQaNoCompletaPrioridad = noCompletaPrioridad / cantSprintsFinal * 100;
-	    porcentajeQaNoCompletaComun = noCompletaComun / cantSprintsFinal * 100;
-	    porcentajeQaOcioso = qaOcioso / cantSprintsFinal * 100;
-    }
-    
-    public void imprimir(){
-    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos de prioridad: "+ porcentajeQaNoCompletaPrioridad);
-    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos: "+ porcentajeQaNoCompletaComun);
-    	System.out.println("Porcentaje de veces que algún equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
-    	System.out.println("Porcentaje de veces que el equipo del proyecto estuvo ocioso: " + porcentajeSprintsOciosos);
-    	System.out.println(": "+ porcentajeQaOcioso);
-    	System.out.println("Promedio de sobrante de horas de QA: "+ promedioPuntosSobrantesPorSprintYEquipo);
-    	System.out.println("Promedio de faltante de horas de QA: "+ promedioPuntosFaltantesPorSprintYEquipo);
-    }
-    
-    public static class Builder {
 
-        private int mQAPeopleAmount;
-        private int[] mProjectsAmount = new int[3];
-        private int[][] mTechnologySeniorities = new int[3][3];
+			// ---------- Start devs ----------
+        	// Se calculan los puntos a estimar por cada equipo y cuánto efectivamente hicieron
+			// Luego se actualiza CPD para calcular los resultados
+        	for (int technology : this.teamsPerTech.keySet()) {
+				int i = 0;
+				for (Team team : this.teamsPerTech.get(technology)) {
+					this.CPD[technology][i] = team.estimateSprint(); // Se setean los puntos estimados
+					this.CPD[technology][i] = this.CPD[technology][i] - team.developSprint(); // Se restan los puntos hechos
+					team.cleanUp();
+					i++;
+				}
+			}
 
-        private Builder() {}
+			// Se procesan los datos del CPD para empezar a obtener resultados
+			// for each technology
+			for (int technology = 0; technology < this.CPD.length; technology++) {
+        		// for each team
+				for (int team = 0; team < this.CPD[technology].length; team++) {
+					int pointsPerTeam = 0;
 
-        public static Builder newInstance() {
-            return new Builder();
-        }
+					// Se calcula si hubo puntos sobrantes o no
+					if (this.CPD[technology][team] > 0) {
+						setAlgunEquipoFallo(Boolean.TRUE);
+						sumarPuntosNoCumplidos(this.CPD[technology][team]);
+					} else if (this.CPD[technology][team] < 0) {
+						setAlgunEquipoOcioso(Boolean.TRUE);
+						// Al hacer la resta de estimados menos hechos
+						// Si hay más hechos, el número es negativo
+						// Por ende, es necesario multiplicarlo por -1
+						sumarPuntosSobrantes(this.CPD[technology][team] * -1);
+						pointsPerTeam = this.CPD[technology][team];
+						this.CPD[technology][team] = 0;
+					}
 
-        public Builder setQAPeopleAmount(int peopleAmount) {
-            this.mQAPeopleAmount = peopleAmount;
-            return this;
-        }
+					// Se destinan los puntos a los stocks de QA
+					if (Math.random() < PORCENTAJE_DE_PRIORIDAD) {
+						sumarCPP(pointsPerTeam);
+					} else {
+						sumarCP(pointsPerTeam);
+					}
+				}
+			}
 
-        public Builder setProjectsAmount(int technology, int projectsAmount) {
-            this.mProjectsAmount[technology] = projectsAmount;
-            return this;
-        }
+			if (this.results.isAlgunEquipoFallo()) {
+				this.results.increaseSprintFallidos();
+			}
 
-        public Builder setSeniorityAmount(int technology, int seniority, int amount) {
-            this.mTechnologySeniorities[technology][seniority] = amount;
-            return this;
-        }
+			if (this.results.isAlgunEquipoOcioso()) {
+				this.results.increaseSprintOciosos();
+			}
+			// ---------- End devs ----------
 
-        public SimulationInstance build() {
-            System.out.println("La cantidad de gente de QA es " + this.mQAPeopleAmount);
+			// ---------- Start QA ----------
+			// Se calcula el total de horas por día que usa QA para test
+        	int qaHoursWork = HOURS_QA_WORK_PER_DAY * qaPeopleAmount;
 
-            for (int i = 0; i < this.mProjectsAmount.length; i++) {
-                System.out.println("En la tecnologia " + i + " hay " + this.mProjectsAmount[i]);
-            }
+        	// Se testean los puntos prioritarios
+        	while (this.CPP > 0 && qaHoursWork > 0) {
+				this.CPP -= ComplexityPointsQA.getPointsTestedPerHour();
+				qaHoursWork--;
+			}
 
-        	
-            for (int i = 0; i < this.mTechnologySeniorities.length; i++) {
-                for (int i2 = 0; i2 < this.mTechnologySeniorities[i].length; i2++) {
-                    System.out.println("En la tecnologia " + i + " hay " + this.mTechnologySeniorities[i][i2] + " de nivel " + i2);
-                }
-            }
+			if (this.CPP > 0) {
+        		// Quedaron puntos prioritarios por probar
+				increaseNoCompletaPrioridad();
+				increaseNoCompletaComun();
+				sumarPuntosNoProbados(this.CPP + this.CP);
+			} else if (qaHoursWork > 0) {
+        		// Se terminaron los puntos prioritarios y quedan horas de QA
+				// Se testean los puntos no prioritarios
+				while (this.CP > 0 && qaHoursWork > 0) {
+					this.CP -= ComplexityPointsQA.getPointsTestedPerHour();
+					qaHoursWork--;
+				}
 
-            return new SimulationInstance(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities);
+				if (this.CP > 0) {
+					// Quedaron puntos comunes por probar
+					increaseNoCompletaComun();
+					sumarPuntosNoProbados(this.CP);
+				} else if (qaHoursWork > 0) {
+					// Quedaron horas sobrantes de QA
+					increaseQaOcioso();
+				}
+			}
+
+			// Se resetean las variables
+			this.CPP = 0;
+        	this.CP = 0;
+			// ---------- End QA ----------
         }
     }
 
-	public int getmQAPeopleAmount() {
-		return this.mQAPeopleAmount;
+    private void results() {
+		this.results.calcularResultados();
+		this.results.imprimir();
 	}
 
-	public int[] getmProjectsAmount() {
-		return this.mProjectsAmount;
+	private void sumarCP(double puntos){
+		this.CP += puntos;
 	}
 
-	public int[][] getmTechnologySeniorities() {
-		return this.mTechnologySeniorities;
+	private void sumarCPP(double puntos){
+		this.CPP += puntos;
+	}
+	
+	private void setAlgunEquipoFallo(boolean bol){
+		this.results.setAlgunEquipoFallo(bol);
+	}
+	
+	private void setAlgunEquipoOcioso(boolean bol){
+		this.results.setAlgunEquipoOcioso(bol);
+	}
+	
+	private void sumarPuntosNoCumplidos(int puntos){
+		this.results.sumarPuntosNoCumplidos(puntos);
+	}
+	
+	private void sumarPuntosSobrantes(int puntos){
+		this.results.sumarPuntosSobrantes(puntos);
+	}
+	
+	private void increaseNoCompletaPrioridad(){
+		this.results.increaseNoCompletaPrioridad();
+	}
+	
+	private void increaseNoCompletaComun(){
+		this.results.increaseNoCompletaComun();
+	}
+	
+	private void sumarPuntosNoProbados(int puntos){
+		this.results.sumarPuntosNoProbados(puntos);
+	}
+	
+	public void increaseQaOcioso(){
+		this.results.increaseQaOcioso();
+	}
+	
+	public void sumarPuntosSobrantesQa(double puntos){
+		this.results.sumarPuntosSobrantesQa(puntos);
+	}
+
+	public int getCantSprintsFinal() {
+		return this.cantSprintsFinal;
 	}
 
 	public int getCantEquipos() {
-    	int cantEquipos = 0;
-    	for(TechnologyEnum unaTecnologia : TechnologyEnum.values()){
-    		cantEquipos += this.mProjectsAmount[unaTecnologia.getId()];
-    	}
-		return cantEquipos;
+		int amount = 0;
+		for (List<Team> teams : teamsPerTech.values()) {
+			amount += teams.size();
+		}
+
+		return amount;
 	}
-    public int getCantEquipos(int iTech) {
-    	int cantEquipos = this.mProjectsAmount[ iTech ];
-		return cantEquipos;
+
+	public static class Builder {
+
+		private int cantSprintsFinal;
+		private int mQAPeopleAmount;
+		private int[] mProjectsAmount = new int[3];
+		private int[][] mTechnologySeniorities = new int[3][3];
+
+		private Builder() {}
+
+		public static Builder newInstance() {
+			return new Builder();
+		}
+
+		public Builder setQAPeopleAmount(int peopleAmount) {
+			this.mQAPeopleAmount = peopleAmount;
+			return this;
+		}
+
+		public Builder setProjectsAmount(int technology, int projectsAmount) {
+			this.mProjectsAmount[technology] = projectsAmount;
+			return this;
+		}
+
+		public Builder setSeniorityAmount(int technology, int seniority, int amount) {
+			this.mTechnologySeniorities[technology][seniority] = amount;
+			return this;
+		}
+
+		public SimulationInstance build() {
+			System.out.println("La cantidad de gente de QA es " + this.mQAPeopleAmount);
+
+			for (int i = 0; i < this.mProjectsAmount.length; i++) {
+				System.out.println("En la tecnologia " + i + " hay " + this.mProjectsAmount[i]);
+			}
+
+
+			for (int i = 0; i < this.mTechnologySeniorities.length; i++) {
+				for (int i2 = 0; i2 < this.mTechnologySeniorities[i].length; i2++) {
+					System.out.println("En la tecnologia " + i + " hay " + this.mTechnologySeniorities[i][i2] + " de nivel " + i2);
+				}
+			}
+
+			return new SimulationInstance(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal);
+		}
 	}
 }

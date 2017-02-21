@@ -6,6 +6,11 @@ import static java.lang.Math.*;
 public class ComplexityPointsDev {
 
     public static double getEstimatedPointsPerSprint(int technology, int seniority) {
+
+        return 0;
+    }
+
+    public static double getCompletedPointsPerHour(int technology, int seniority) {
     	
     	double r = Math.random();
     	double u;
@@ -33,13 +38,6 @@ public class ComplexityPointsDev {
     		}
     		
     	}
-    	
-        return 0;
-    }
-
-    public static double getCompletedPointsPerHour(int technology, int seniority) {
-    	
-    	
     	
         return 0;
     }

@@ -2,7 +2,7 @@ package com.github.luksdlt92.simulacion.model.instance;
 
 public class SimulationResults {
 	
-	private SimulationInstance2 simulation;
+	private SimulationInstance simulation;
 	private boolean algunEquipoFallo = Boolean.FALSE;
     private boolean algunEquipoOcioso = Boolean.FALSE;
     private int puntosNoCumplidos = 0;
@@ -23,12 +23,12 @@ public class SimulationResults {
     private double porcentajeQaNoCompletaComun = 0;
     private double porcentajeQaOcioso = 0;
     
-    public SimulationResults(SimulationInstance2 simulation){
+    public SimulationResults(SimulationInstance simulation){
     	this.simulation=simulation;
     }
 
-    public void calcularResultados(){
-    	this.porcentajeSprintsFallidos = this.sprintFallidos / this.simulation.getCantSprintsFinal()* 100;
+    public void calcularResultados() {
+    	this.porcentajeSprintsFallidos = this.sprintFallidos / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeSprintsOciosos = this.sprintOciosos / this.simulation.getCantSprintsFinal() * 100;
     	this.promedioPuntosSobrantesPorSprintYEquipo = this.puntosSobrantes / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
     	this.promedioPuntosFaltantesPorSprintYEquipo = this.puntosNoCumplidos / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
@@ -36,12 +36,13 @@ public class SimulationResults {
     	this.porcentajeQaNoCompletaComun = this.noCompletaComun / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeQaOcioso = this.qaOcioso / this.simulation.getCantSprintsFinal() * 100;
     }
+
     public void imprimir(){
-    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos de prioridad: "+ porcentajeQaNoCompletaPrioridad);
-    	System.out.println("Porcentaje de veces que QA no alcanzó a probar la totalidad de los puntos: "+ porcentajeQaNoCompletaComun);
-    	System.out.println("Porcentaje de veces que algún equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
+    	System.out.println("Porcentaje de veces que QA no alcanzo a probar la totalidad de los puntos de prioridad: "+ porcentajeQaNoCompletaPrioridad);
+    	System.out.println("Porcentaje de veces que QA no alcanzo a probar la totalidad de los puntos: "+ porcentajeQaNoCompletaComun);
+    	System.out.println("Porcentaje de veces que algun equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
     	System.out.println("Porcentaje de veces que el equipo del proyecto estuvo ocioso: " + porcentajeSprintsOciosos);
-    	System.out.println(": "+ porcentajeQaOcioso);
+    	System.out.println("Porcentaje de veces que QA estuvo ocioso: "+ porcentajeQaOcioso);
     	System.out.println("Promedio de sobrante de horas de QA: "+ promedioPuntosSobrantesPorSprintYEquipo);
     	System.out.println("Promedio de faltante de horas de QA: "+ promedioPuntosFaltantesPorSprintYEquipo);
     }
@@ -49,6 +50,7 @@ public class SimulationResults {
 	public boolean isAlgunEquipoFallo() {
 		return algunEquipoFallo;
 	}
+
 	public void setAlgunEquipoFallo(boolean algunEquipoFallo) {
 		this.algunEquipoFallo = algunEquipoFallo;
 	}

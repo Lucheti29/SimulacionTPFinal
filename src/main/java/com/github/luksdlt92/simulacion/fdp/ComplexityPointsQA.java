@@ -12,6 +12,6 @@ public class ComplexityPointsQA {
     	double y = 0.10339;
     	double r = random();
     	
-        return pow( (pow(a,-1/k)), -1/r) * (y * pow( (pow(a, -1/k) - 1), 1/r) + b);
+        return pow( (pow(a,-1/k)), -1/r) * (y * pow( (pow(a, -1/k) - 1), 1/r) + b); //Dagum 4P
     }
 }

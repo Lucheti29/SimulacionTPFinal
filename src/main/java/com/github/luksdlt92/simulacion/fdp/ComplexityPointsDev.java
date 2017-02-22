@@ -8,6 +8,18 @@ public class ComplexityPointsDev {
 
     public static double getEstimatedPointsPerSprint(int technology, int seniority) {
 
+    	double r = Math.random();
+    	double a, b;
+    	a = 0.517; b = 0.906;
+		r = r * (b - a) + a;
+		
+    	if( technology == Technology.ANDROID )
+    		return r * 0.62;
+    	if( technology == Technology.IOS )
+    		return r * 0.78;
+    	if( technology == Technology.WEB )
+    		return r * 0.8;
+    	
         return 0;
     }
 

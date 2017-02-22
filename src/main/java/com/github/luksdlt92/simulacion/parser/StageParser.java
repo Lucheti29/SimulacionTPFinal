@@ -35,6 +35,9 @@ public class StageParser {
 
             String qaPeopleText = node.getElementsByTagName("qapeople").item(0).getTextContent();
             simulationBuilder.setQAPeopleAmount(Integer.valueOf(qaPeopleText));
+            
+            String stageIdText = node.getElementsByTagName("id").item(0).getTextContent();
+            simulationBuilder.setStageId(Integer.valueOf(stageIdText));
 
             NodeList technologies = node.getElementsByTagName("technology");
 

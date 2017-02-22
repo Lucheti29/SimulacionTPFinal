@@ -9,3 +9,5 @@ Para buildear la simulación y correrla, hay que hacer lo siguiente:
 5. Ejecutar el run.bat
 
 ¡Listo! Debería abrirse una consola e iniciar la simulación.
+
+![Jefa de los minisuper](http://i.imgur.com/zJPP5dB.jpg)

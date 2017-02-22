@@ -33,7 +33,8 @@ public class ComplexityPointsDev {
     		if( seniority == Seniority.JUNIOR ){
     			o = 0.08766;
     			u = 0.4473;
-    			return r * tan(0.5 * PI * (2*o - 1) ) + u; //Cauchy
+    			return u - o * tan(1.5708 - PI*r);
+    					//r * tan(0.5 * PI * (2*o - 1) ) + u; //Cauchy
     		}
     		
     		if( seniority == Seniority.SENIOR ){
@@ -57,7 +58,8 @@ public class ComplexityPointsDev {
     			k = 0.72588;
     			a = 4.2057;
     			b = 0.62311;
-    			return pow(-1 + pow(a,-1/k),-1/r) * b; //Dagum 3P
+    			return b/pow( (1/(1.37764 * r) - 1),0.237772546);
+    					//pow(-1 + pow(a,-1/k),-1/r) * b; //Dagum 3P
     		}
     		
     		if( seniority == Seniority.SENIOR ){

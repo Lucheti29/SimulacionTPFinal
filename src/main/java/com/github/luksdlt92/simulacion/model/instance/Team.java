@@ -5,6 +5,8 @@ import com.github.luksdlt92.simulacion.fdp.ComplexityPointsDev;
 
 public class Team {
 
+	private static final int DAYS_PER_SPRINT = 10;
+	
     private final int technology;
     private final int[] devs = new int[3];
     private final int hoursWork;
@@ -33,10 +35,10 @@ public class Team {
             }
         }*/
     	
-    	int estimatedPoints;
-    	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1)).intValue();
-    	estimatedPoints *= this.hoursWork;
+    	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
+    			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();
     	
+    	System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
 
         return estimatedPoints;
     }
@@ -46,18 +48,23 @@ public class Team {
      * Tiene que llamarse por cada sprint, después de estimateSprint preferentemente
      */
     public int developSprint() {
+    	
+    	double developedPoints = 0;
         // for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
             for (int i = 0; i < devs[seniority]; i++) {
                 // for each hour of work
-                for (int i2 = 0; i2 < hoursWork; i2++) {
+                for (int i2 = 0; i2 < hoursWork * DAYS_PER_SPRINT; i2++) {
                     developedPoints += ComplexityPointsDev.getCompletedPointsPerHour(technology, seniority);
                 }
             }
         }
 
-        return developedPoints;
+
+    	System.out.println("Developed points: " + new Double(developedPoints).toString() );
+    	
+        return new Double(developedPoints).intValue();
     }
 
     /**
@@ -67,5 +74,13 @@ public class Team {
     public void cleanUp() {
         estimatedPoints = 0;
         developedPoints = 0;
+    }
+    
+    private int cantDevs(){
+    	int sum = 0;
+    	for(int i=0;i<devs.length;i++){
+    		sum += devs[i];
+    	}
+    	return sum;
     }
 }

@@ -25,13 +25,18 @@ public class Team {
      * Tiene que llamarse por cada sprint
      */
     public int estimateSprint() {
-        // for each seniority
+        /*// for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
             for (int i = 0; i < devs[seniority]; i++) {
                 estimatedPoints += ComplexityPointsDev.getEstimatedPointsPerSprint(technology, seniority);
             }
-        }
+        }*/
+    	
+    	int estimatedPoints;
+    	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1)).intValue();
+    	estimatedPoints *= this.hoursWork;
+    	
 
         return estimatedPoints;
     }

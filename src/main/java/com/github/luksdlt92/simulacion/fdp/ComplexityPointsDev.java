@@ -66,7 +66,9 @@ public class ComplexityPointsDev {
     			a = 2.3355;
     			b = 0.56858;
     			y = 0.05016;
-    			return pow(-log(a),-1/r) * (y * pow(-log(a),1/r) + b); //Frechet 3P
+    			double z = 0.4281738385784628;
+    			return (0.05016 * pow(-log(r),z) + 0.78525 )/(pow(-log(r),z));
+    					//pow(-log(a),-1/r) * (y * pow(-log(a),1/r) + b); //Frechet 3P
     		}
     		
     		if( seniority == Seniority.SEMISENIOR ){
@@ -83,7 +85,8 @@ public class ComplexityPointsDev {
     			k = 0.39185;
     			o = 0.27681;
     			u = 0.37305;
-    			return ( pow(-log(k), -r) * (o * pow(-log(k),r) - u*r * (pow(-log(k),r) - o))  )/ r; //Gen. Extreme Value
+    			return (0.706418 - 0.333368 * pow(-log(r), 0.39185) ) / pow(-log(r),0.39185);
+    					//( pow(-log(k), -r) * (o * pow(-log(k),r) - u*r * (pow(-log(k),r) - o))  )/ r; //Gen. Extreme Value
     		}
     		
     		if( seniority == Seniority.SENIOR ){
@@ -96,7 +99,8 @@ public class ComplexityPointsDev {
     		if( seniority == Seniority.SEMISENIOR ){
     			a = 2.4153;
     			b = 0.93766;
-    			return b * pow(-log(1-a),1/r); //Weibull 2P
+    			return 0.93766 * pow(-log(1-r),0.4140272429925889);
+    					//b * pow(-log(1-a),1/r); //Weibull 2P
     		}
     	}
         return 0;

@@ -69,7 +69,7 @@ public class ComplexityPointsDev {
     			k = 0.39185;
     			o = 0.27681;
     			u = 0.37305;
-    			return u - r*log(-log(o)); //Gen. Extreme Value
+    			return ( pow(-log(k), -r) * (o * pow(-log(k),r) - u*r * (pow(-log(k),r) - o))  )/ r; //Gen. Extreme Value
     		}
     		
     		if( seniority == Seniority.SENIOR ){

@@ -113,8 +113,8 @@ public class SimulationInstance {
 						// Al hacer la resta de estimados menos hechos
 						// Si hay más hechos, el número es negativo
 						// Por ende, es necesario multiplicarlo por -1
-						sumarPuntosSobrantes(this.CPD[technology][team] * -1);
-						pointsPerTeam = this.CPD[technology][team];
+						sumarPuntosSobrantes(Math.abs(this.CPD[technology][team]));
+						pointsPerTeam = Math.abs(this.CPD[technology][team]);
 						this.CPD[technology][team] = 0;
 					}
 
@@ -149,8 +149,8 @@ public class SimulationInstance {
 			if (this.CPP > 0) {
         		// Quedaron puntos prioritarios por probar
 				increaseNoCompletaPrioridad();
-				increaseNoCompletaComun();
 				sumarPuntosNoProbados(this.CPP + this.CP);
+				increaseNoCompletaComun();
 			} else if (qaHoursWork > 0) {
         		// Se terminaron los puntos prioritarios y quedan horas de QA
 				// Se testean los puntos no prioritarios
@@ -158,7 +158,7 @@ public class SimulationInstance {
 					this.CP -= ComplexityPointsQA.getPointsTestedPerHour();
 					qaHoursWork--;
 				}
-
+				
 				if (this.CP > 0) {
 					// Quedaron puntos comunes por probar
 					increaseNoCompletaComun();
@@ -166,12 +166,14 @@ public class SimulationInstance {
 				} else if (qaHoursWork > 0) {
 					// Quedaron horas sobrantes de QA
 					increaseQaOcioso();
+					sumarPuntosSobrantesQa(Math.abs(this.CP));
 				}
 			}
 
-			// Se resetean las variables
-			this.CPP = 0;
-        	this.CP = 0;
+			// Se resetean las variables 
+			//this.CPP = 0;
+			//this.CP = 0;
+			
 			// ---------- End QA ----------
         
         	// ---------- Start Write Line CSV ----------

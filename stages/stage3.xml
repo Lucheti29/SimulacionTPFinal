@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <stage>
-	<id>1</id>
-	<qapeople>4</qapeople>
+	<id>3</id>
+	<qapeople>10</qapeople>
 	
 	<technology name="android">
 		<projects>3</projects>

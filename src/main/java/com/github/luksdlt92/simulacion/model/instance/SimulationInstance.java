@@ -86,7 +86,8 @@ public class SimulationInstance {
 
         	resetBooleans();
         	
-			// ---------- Start devs ----------
+        	calcularDev();
+		/*	// ---------- Start devs ----------
         	// Se calculan los puntos a estimar por cada equipo y cuánto efectivamente hicieron
 			// Luego se actualiza CPD para calcular los resultados
         	for (int technology : this.teamsPerTech.keySet()) {
@@ -136,7 +137,7 @@ public class SimulationInstance {
 			if (this.results.isAlgunEquipoOcioso()) {
 				this.results.increaseSprintOciosos();
 			}
-			// ---------- End devs ----------
+			// ---------- End devs ----------*/
 
 			calcularQa();
 /*			// ---------- Start QA ----------
@@ -330,9 +331,9 @@ public class SimulationInstance {
 	   	}else{
 	   		//Alcanzo a completar prioridad
 	   		
-	   		this.CPP = 0; //Vuelvo a 0 el valor de CPP en caso de que este en negativo
+	   		this.CP += this.CPP; //sumo porque al ser negativo, necesito que reste
 	   		
-	   		this.CP -= puntosProbados;
+	   		this.CPP = 0; //Vuelvo a 0 el valor de CPP en caso de que este en negativo
 	   		
 	   		if(this.CP > 0){
 	   			//No alcanzo a completar comun
@@ -347,6 +348,46 @@ public class SimulationInstance {
 	   		}
 	   	}
 		
+	}
+	
+	private void calcularDev(){
+
+    	for (int technology : this.teamsPerTech.keySet()) {
+    		
+			for (Team team : this.teamsPerTech.get(technology)) {
+				team.stockPuntos += team.estimateSprint(); // Se setean los puntos estimados
+				team.stockPuntos -= team.developSprint(); // Se restan los puntos hechos
+				
+				int puntosCompletados = 0;
+				
+				if(team.stockPuntos > 0){
+					//El equipo no completo todos los puntos
+					setAlgunEquipoFallo(Boolean.TRUE);
+					sumarPuntosNoCumplidos(team.stockPuntos);
+					puntosCompletados = team.developedPoints;
+				}else if(team.stockPuntos <= 0){
+					//El equipo quedo ocioso
+					setAlgunEquipoOcioso(Boolean.TRUE);
+					sumarPuntosSobrantes(-team.stockPuntos);
+					puntosCompletados = team.developedPoints + team.stockPuntos;
+					team.stockPuntos = 0;
+				}
+				
+				//Mando a prioridad o comun
+				if(Math.random() < PORCENTAJE_DE_PRIORIDAD){
+					sumarCPP(puntosCompletados);
+				}else sumarCP(puntosCompletados);
+			}
+			
+		}
+    	
+		if (this.results.isAlgunEquipoFallo()) {
+			this.results.increaseSprintFallidos();
+		}
+
+		if (this.results.isAlgunEquipoOcioso()) {
+			this.results.increaseSprintOciosos();
+		}
 	}
 	
 	private void resetBooleans(){

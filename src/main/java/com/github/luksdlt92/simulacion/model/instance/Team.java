@@ -11,8 +11,10 @@ public class Team {
     private final int[] devs = new int[3];
     private final int hoursWork;
 
-    private int estimatedPoints = 0;
-    private int developedPoints = 0;
+    //Los hago public para hacer mas rapido
+    public int estimatedPoints = 0;
+    public int developedPoints = 0;
+    public int stockPuntos = 0;
 
     public Team(int technology, int devsSenior, int devsSemiSenior, int devsJunior, int hoursWork) {
         this.technology = technology;
@@ -38,11 +40,11 @@ public class Team {
     	/*estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
     			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();*/
 	    
-    	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
+    	this.estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
     	
     	//System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
 
-        return estimatedPoints;
+        return this.estimatedPoints;
     }
 
     /**
@@ -51,14 +53,14 @@ public class Team {
      */
     public int developSprint() {
     	
-    	double developedPoints = 0;
+    	this.developedPoints = 0;
         // for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
             for (int i = 0; i < devs[seniority]; i++) {
                 // for each hour of work
                 for (int i2 = 0; i2 < hoursWork * DAYS_PER_SPRINT; i2++) {
-                    developedPoints += ComplexityPointsDev.getCompletedPointsPerHour(technology, seniority);
+                    this.developedPoints += ComplexityPointsDev.getCompletedPointsPerHour(technology, seniority);
                 }
             }
         }
@@ -67,7 +69,7 @@ public class Team {
         
     	//System.out.println("Developed points: " + new Double(developedPoints).toString() );
     	
-        return new Double(developedPoints).intValue();
+        return new Double(this.developedPoints).intValue();
     }
 
     /**

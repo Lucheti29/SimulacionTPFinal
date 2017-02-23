@@ -342,7 +342,7 @@ public class SimulationInstance {
 	   		}else if(this.CP < 0){
 	   			//QA Ocioso
 	   			increaseQaOcioso();
-	   			sumarPuntosSobrantesQa(-this.CP); //el - porque esta negativo
+	   			sumarPuntosSobrantesQa(Math.abs(this.CP)); //el - porque esta negativo
 	   			
 	   			this.CP = 0; //Vuelvo el valor a 0
 	   		}
@@ -368,7 +368,7 @@ public class SimulationInstance {
 				}else if(team.stockPuntos <= 0){
 					//El equipo quedo ocioso
 					setAlgunEquipoOcioso(Boolean.TRUE);
-					sumarPuntosSobrantes(-team.stockPuntos);
+					sumarPuntosSobrantes(Math.abs(team.stockPuntos));
 					puntosCompletados = team.developedPoints + team.stockPuntos;
 					team.stockPuntos = 0;
 				}

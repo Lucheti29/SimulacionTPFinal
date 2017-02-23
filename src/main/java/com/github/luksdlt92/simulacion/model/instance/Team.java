@@ -40,7 +40,7 @@ public class Team {
 	    
     	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
     	
-    	System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
+    	//System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
 
         return estimatedPoints;
     }
@@ -51,7 +51,7 @@ public class Team {
      */
     public int developSprint() {
     	
-    	/*double developedPoints = 0;
+    	double developedPoints = 0;
         // for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
@@ -61,11 +61,11 @@ public class Team {
                     developedPoints += ComplexityPointsDev.getCompletedPointsPerHour(technology, seniority);
                 }
             }
-        }*/
+        }
 
-        developedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
+        //developedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
         
-    	System.out.println("Developed points: " + new Double(developedPoints).toString() );
+    	//System.out.println("Developed points: " + new Double(developedPoints).toString() );
     	
         return new Double(developedPoints).intValue();
     }

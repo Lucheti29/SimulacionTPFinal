@@ -123,7 +123,7 @@ public class SimulationResults {
 	}
 
 	public void sumarPuntosSobrantesQa(double puntosSobrantesQa){
-		this.puntosSobrantesQa++;
+		this.puntosSobrantesQa += puntosSobrantesQa;
 	}
 
 	public int getSprintFallidos() {

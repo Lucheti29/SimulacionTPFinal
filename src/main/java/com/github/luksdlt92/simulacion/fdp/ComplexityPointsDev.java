@@ -9,20 +9,19 @@ public class ComplexityPointsDev {
 	private static final double COTA_SUPERIOR = 3;
 	private static final double COTA_INFERIOR = 0;
 
-    public static double getEstimatedPointsPerSprint(int technology, int seniority) {
+    public static double getEstimatedPointsPerSprint(int technology, int hoursWork) {
 
     	double r = Math.random();
-    	double a, b;
-    	a = 0.517; b = 0.906;
-		r = r * (b - a) + a;
+	double rParcial = 0;
 		
     	if( technology == Technology.ANDROID )
-    		return r * 0.62;
+    		rParcial = 100.8/pow( 1/( pow(r,118.483) - 1 ), 0.002660069693825978 ) * 0.62;
     	if( technology == Technology.IOS )
-    		return r * 0.78;
+    		rParcial = 140.7 * pow( 1/pow(1 - x, 0.0200582) - 1, 0.1487187876444431 ) * 0.78;
     	if( technology == Technology.WEB )
-    		return r * 0.8;
-        return 0;
+    		rParcial 3868.45 * (0.00102677 - pow(1 - pow(1-x,0.380662),0.3364284753061499) * 0.8;
+	    
+        return rParcial * hoursWork;
     }
     
     public static double getCompletedPointsPerHour(int technology, int seniority) {

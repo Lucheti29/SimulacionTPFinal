@@ -50,7 +50,7 @@ public class SimulationResults {
     	System.out.println("Porcentaje de veces que QA no alcanzo a probar la totalidad de los puntos: "+ porcentajeQaNoCompletaComun);
     	System.out.println("Porcentaje de veces que algun equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
     	System.out.println("Porcentaje de veces que el equipo del proyecto estuvo ocioso: " + porcentajeSprintsOciosos);
-    	System.out.println("Porcentaje de veces que QA estuvo ocioso: "+ porcentajeQaOcioso);
+//    	System.out.println("Porcentaje de veces que QA estuvo ocioso: "+ porcentajeQaOcioso);
     	System.out.println("Promedio de sobrante de puntos de DEV: "+ promedioPuntosSobrantesPorSprintYEquipo);
     	System.out.println("Promedio de faltante de puntos de DEV: "+ promedioPuntosFaltantesPorSprintYEquipo);
     	System.out.println("Promedio de sobrante de puntos de QA: "+ promedioPuntosSobrantesQa);

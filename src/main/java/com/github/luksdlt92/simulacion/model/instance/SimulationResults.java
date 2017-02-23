@@ -8,10 +8,10 @@ public class SimulationResults {
     private int puntosNoCumplidos = 0;
     private int puntosSobrantes = 0;
     private int puntosNoProbados = 0;
+	private int puntosSobrantesQa = 0;
     private int noCompletaPrioridad = 0;
     private int noCompletaComun = 0;
     private int qaOcioso = 0;
-	private double puntosSobrantesQa = 0;
 	private int sprintFallidos = 0;
 	private int sprintOciosos = 0;
 	//Resultados
@@ -22,6 +22,9 @@ public class SimulationResults {
     private double porcentajeQaNoCompletaPrioridad = 0;
     private double porcentajeQaNoCompletaComun = 0;
     private double porcentajeQaOcioso = 0;
+    
+    private double promedioPuntosSobrantesQa = 0;
+    private double promedioPuntosFaltantesQa = 0;
     
     public SimulationResults(SimulationInstance simulation){
     	this.simulation=simulation;
@@ -35,6 +38,8 @@ public class SimulationResults {
     	this.porcentajeQaNoCompletaPrioridad = this.noCompletaPrioridad / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeQaNoCompletaComun = this.noCompletaComun / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeQaOcioso = this.qaOcioso / this.simulation.getCantSprintsFinal() * 100;
+    	this.promedioPuntosSobrantesQa = this.puntosSobrantesQa / this.simulation.getCantSprintsFinal();
+    	this.promedioPuntosFaltantesQa = this.puntosNoProbados / this.simulation.getCantSprintsFinal();
     }
 
     public void imprimir(){
@@ -43,8 +48,10 @@ public class SimulationResults {
     	System.out.println("Porcentaje de veces que algun equipo no pudo cumplir con la cantidad de puntos requeridos: " + porcentajeSprintsFallidos);
     	System.out.println("Porcentaje de veces que el equipo del proyecto estuvo ocioso: " + porcentajeSprintsOciosos);
     	System.out.println("Porcentaje de veces que QA estuvo ocioso: "+ porcentajeQaOcioso);
-    	System.out.println("Puntos de complejidad promedio sobrantes (Equipo ocioso): "+ promedioPuntosSobrantesPorSprintYEquipo);
-    	System.out.println("Promedio de puntos de complejidad que no se cumplieron: "+ promedioPuntosFaltantesPorSprintYEquipo);
+    	System.out.println("Promedio de sobrante de puntos de DEV: "+ promedioPuntosSobrantesPorSprintYEquipo);
+    	System.out.println("Promedio de faltante de puntos de DEV: "+ promedioPuntosFaltantesPorSprintYEquipo);
+    	System.out.println("Promedio de sobrante de puntos de QA: "+ promedioPuntosSobrantesQa);
+    	System.out.println("Promedio de faltante de puntos de QA: "+ promedioPuntosFaltantesQa);
     }
 
 	public boolean isAlgunEquipoFallo() {
@@ -116,7 +123,7 @@ public class SimulationResults {
 	}
 
 	public void sumarPuntosSobrantesQa(double puntosSobrantesQa){
-		this.puntosSobrantesQa++;
+		this.puntosSobrantesQa += puntosSobrantesQa;
 	}
 
 	public int getSprintFallidos() {
@@ -163,4 +170,7 @@ public class SimulationResults {
 		return porcentajeQaOcioso;
 	}
 
+	public void sumarPuntosSobrantesQa(int puntos){
+		this.puntosSobrantesQa += puntos;
+	}
 }

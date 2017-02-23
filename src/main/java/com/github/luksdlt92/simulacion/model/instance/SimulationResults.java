@@ -23,6 +23,9 @@ public class SimulationResults {
     private double porcentajeQaNoCompletaComun = 0;
     private double porcentajeQaOcioso = 0;
     
+    private double promedioPuntosSobrantesQa = 0;
+    private double promedioPuntosFaltantesQa = 0;
+    
     public SimulationResults(SimulationInstance simulation){
     	this.simulation=simulation;
     }
@@ -35,6 +38,8 @@ public class SimulationResults {
     	this.porcentajeQaNoCompletaPrioridad = this.noCompletaPrioridad / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeQaNoCompletaComun = this.noCompletaComun / this.simulation.getCantSprintsFinal() * 100;
     	this.porcentajeQaOcioso = this.qaOcioso / this.simulation.getCantSprintsFinal() * 100;
+    	this.promedioPuntosSobrantesQa = this.puntosSobrantesQa / this.simulation.getCantSprintsFinal();
+    	this.promedioPuntosFaltantesQa = this.puntosNoProbados / this.simulation.getCantSprintsFinal();
     }
 
     public void imprimir(){
@@ -45,6 +50,8 @@ public class SimulationResults {
     	System.out.println("Porcentaje de veces que QA estuvo ocioso: "+ porcentajeQaOcioso);
     	System.out.println("Promedio de sobrante de puntos de DEV: "+ promedioPuntosSobrantesPorSprintYEquipo);
     	System.out.println("Promedio de faltante de puntos de DEV: "+ promedioPuntosFaltantesPorSprintYEquipo);
+    	System.out.println("Promedio de sobrante de puntos de QA: "+ promedioPuntosSobrantesQa);
+    	System.out.println("Promedio de faltante de puntos de QA: "+ promedioPuntosFaltantesQa);
     }
 
 	public boolean isAlgunEquipoFallo() {

@@ -84,6 +84,8 @@ public class SimulationInstance {
         while (deltaT <= cantSprintsFinal) {
         	deltaT++;
 
+        	resetBooleans();
+        	
 			// ---------- Start devs ----------
         	// Se calculan los puntos a estimar por cada equipo y cuánto efectivamente hicieron
 			// Luego se actualiza CPD para calcular los resultados
@@ -341,5 +343,10 @@ public class SimulationInstance {
 	   		}
 	   	}
 		
+	}
+	
+	private void resetBooleans(){
+		setAlgunEquipoOcioso(Boolean.FALSE);
+		setAlgunEquipoFallo(Boolean.FALSE);
 	}
 }

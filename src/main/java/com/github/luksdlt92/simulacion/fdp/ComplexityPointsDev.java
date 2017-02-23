@@ -12,14 +12,14 @@ public class ComplexityPointsDev {
     public static double getEstimatedPointsPerSprint(int technology, int hoursWork) {
 
     	double r = Math.random();
-	double rParcial = 0;
+    	double rParcial = 0;
 		
     	if( technology == Technology.ANDROID )
-    		rParcial = 100.8/pow( 1/( pow(r,118.483) - 1 ), 0.002660069693825978 ) * 0.62;
+    		rParcial = 100.8/pow( 1/pow(r,118.483) - 1 , 0.002660069693825978 ) * 0.62;
     	if( technology == Technology.IOS )
-    		rParcial = 140.7 * pow( 1/pow(1 - x, 0.0200582) - 1, 0.1487187876444431 ) * 0.78;
+    		rParcial = 140.7 * pow( 1/pow(1 - r, 0.0200582) - 1, 0.1487187876444431 ) * 0.78;
     	if( technology == Technology.WEB )
-    		rParcial = 3868.45 * (0.00102677 - pow(1 - pow(1-x,0.380662),0.3364284753061499) * 0.8;
+    		rParcial = -107.522 * ( 0.0369413 - pow(1 - pow(1-r,0.380662),0.3364284753061499) ) * 0.8;
 	    
         return rParcial * hoursWork;
     }

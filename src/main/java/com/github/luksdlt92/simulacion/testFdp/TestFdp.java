@@ -84,11 +84,25 @@ public class TestFdp {
 						getCompletedPointsPerHour(Technology.WEB, Seniority.SENIOR));
 			}
 			
-			writer.println("------------->valores estimacion<-------------");
+			writer.println("------------->valores estimacion ANDROID<-------------");
 			for(i=0;i<100;i++){
 				writer.println(
 						ComplexityPointsDev
-						.getEstimatedPointsPerSprint(Technology.ANDROID, 1));
+						.getEstimatedPointsPerSprint(Technology.ANDROID, 6));
+			}
+			
+			writer.println("------------->valores estimacion IOS<-------------");
+			for(i=0;i<100;i++){
+				writer.println(
+						ComplexityPointsDev
+						.getEstimatedPointsPerSprint(Technology.IOS, 6));
+			}
+			
+			writer.println("------------->valores estimacion WEB<-------------");
+			for(i=0;i<100;i++){
+				writer.println(
+						ComplexityPointsDev
+						.getEstimatedPointsPerSprint(Technology.WEB, 6));
 			}
 			
 			writer.close();

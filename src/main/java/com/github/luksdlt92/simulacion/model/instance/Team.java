@@ -12,9 +12,9 @@ public class Team {
     private final int hoursWork;
 
     //Los hago public para hacer mas rapido
-    public int estimatedPoints = 0;
-    public int developedPoints = 0;
-    public int stockPuntos = 0;
+    public double estimatedPoints = 0;
+    public double developedPoints = 0;
+    public double stockPuntos = 0;
 
     public Team(int technology, int devsSenior, int devsSemiSenior, int devsJunior, int hoursWork) {
         this.technology = technology;
@@ -28,7 +28,7 @@ public class Team {
      * Calcula los puntos estimados por el equipo para el sprint
      * Tiene que llamarse por cada sprint
      */
-    public int estimateSprint() {
+    public double estimateSprint() {
         /*// for each seniority
         for (int seniority = 0; seniority < devs.length; seniority++) {
             // for each dev
@@ -42,7 +42,7 @@ public class Team {
 	    
     	this.estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
     	
-    	//System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
+    	//System.out.println("Estimated points: " + new Double(estimatedPoints).toString() );
 
         return this.estimatedPoints;
     }
@@ -51,7 +51,7 @@ public class Team {
      * Calcula los puntos efectivamente hechos por el equipo para el sprint
      * Tiene que llamarse por cada sprint, después de estimateSprint preferentemente
      */
-    public int developSprint() {
+    public double developSprint() {
     	
     	this.developedPoints = 0;
         // for each seniority

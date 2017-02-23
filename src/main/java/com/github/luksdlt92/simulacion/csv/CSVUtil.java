@@ -13,7 +13,7 @@ import com.github.luksdlt92.simulacion.model.instance.SimulationResults;
 public class CSVUtil {
 
 	private static final char DEFAULT_SEPARATOR = ',';
-	private static final char DEFAULT_QUOTE = '"';
+	private static final char DEFAULT_QUOTE = ' ';
 	private static final String DIRECTORY = "csv/";
 	private static final String DEFAULT_PARTIAL_FILE_NAME = LocalDateTime.now().toString() + " - resultados_stage_";
 	private static final String[] HEADERS = {"deltaT", 

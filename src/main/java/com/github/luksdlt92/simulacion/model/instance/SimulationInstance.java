@@ -212,11 +212,11 @@ public class SimulationInstance {
 		this.results.setAlgunEquipoOcioso(bol);
 	}
 	
-	private void sumarPuntosNoCumplidos(int puntos){
+	private void sumarPuntosNoCumplidos(double puntos){
 		this.results.sumarPuntosNoCumplidos(puntos);
 	}
 	
-	private void sumarPuntosSobrantes(int puntos){
+	private void sumarPuntosSobrantes(double puntos){
 		this.results.sumarPuntosSobrantes(puntos);
 	}
 	
@@ -228,7 +228,7 @@ public class SimulationInstance {
 		this.results.increaseNoCompletaComun();
 	}
 	
-	private void sumarPuntosNoProbados(int puntos){
+	private void sumarPuntosNoProbados(double puntos){
 		this.results.sumarPuntosNoProbados(puntos);
 	}
 	
@@ -358,7 +358,7 @@ public class SimulationInstance {
 				team.stockPuntos += team.estimateSprint(); // Se setean los puntos estimados
 				team.stockPuntos -= team.developSprint(); // Se restan los puntos hechos
 				
-				int puntosCompletados = 0;
+				double puntosCompletados = 0;
 				
 				if(team.stockPuntos > 0){
 					//El equipo no completo todos los puntos

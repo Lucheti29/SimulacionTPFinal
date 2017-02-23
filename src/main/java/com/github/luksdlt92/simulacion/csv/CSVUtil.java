@@ -23,7 +23,9 @@ public class CSVUtil {
 											 "porcentajeSprintsOciosos",
 											 "porcentajeQaOcioso",
 											 "promedioPuntosSobrantesPorSprintYEquipo",
-											 "promedioPuntosFaltantesPorSprintYEquipo"}; 
+											 "promedioPuntosFaltantesPorSprintYEquipo",
+											 "promedioPuntosSobrantesQa",
+											 "promedioPuntosFaltantesQa"}; 
 	
 	
 	
@@ -75,7 +77,9 @@ public class CSVUtil {
 											String.valueOf(r.getPorcentajeSprintsOciosos()),
 											String.valueOf(r.getPorcentajeQaOcioso()),
 											String.valueOf(r.getPromedioPuntosSobrantesPorSprintYEquipo()),
-											String.valueOf(r.getPromedioPuntosFaltantesPorSprintYEquipo()));
+											String.valueOf(r.getPromedioPuntosFaltantesPorSprintYEquipo()),
+											String.valueOf(r.getPromedioPuntosSobrantesQa()),
+											String.valueOf(r.getPromedioPuntosFaltantesQa()) );
 		writeLine(writer, deltaT, values);
 	}
 	

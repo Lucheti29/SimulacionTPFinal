@@ -30,16 +30,16 @@ public class SimulationResults {
     	this.simulation=simulation;
     }
 
-    public void calcularResultados() {
-    	this.porcentajeSprintsFallidos = new Double(this.sprintFallidos) / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeSprintsOciosos = new Double(this.sprintOciosos) / this.simulation.getCantSprintsFinal() * 100;
-    	this.promedioPuntosSobrantesPorSprintYEquipo = this.puntosSobrantes / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
-    	this.promedioPuntosFaltantesPorSprintYEquipo = this.puntosNoCumplidos / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
-    	this.porcentajeQaNoCompletaPrioridad = new Double(this.noCompletaPrioridad) / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeQaNoCompletaComun = new Double(this.noCompletaComun) / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeQaOcioso = new Double(this.qaOcioso) / this.simulation.getCantSprintsFinal() * 100;
-    	this.promedioPuntosSobrantesQa = this.puntosSobrantesQa / this.simulation.getCantSprintsFinal();
-    	this.promedioPuntosFaltantesQa = this.puntosNoProbados / this.simulation.getCantSprintsFinal();
+    public void calcularResultados() {    	
+    	this.porcentajeSprintsFallidos = new Double(this.sprintFallidos) / this.simulation.getDeltaT() * 100;
+    	this.porcentajeSprintsOciosos = new Double(this.sprintOciosos) / this.simulation.getDeltaT() * 100;
+    	this.promedioPuntosSobrantesPorSprintYEquipo = this.puntosSobrantes / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
+    	this.promedioPuntosFaltantesPorSprintYEquipo = this.puntosNoCumplidos / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
+    	this.porcentajeQaNoCompletaPrioridad = new Double(this.noCompletaPrioridad) / this.simulation.getDeltaT() * 100;
+    	this.porcentajeQaNoCompletaComun = new Double(this.noCompletaComun) / this.simulation.getDeltaT() * 100;
+    	this.porcentajeQaOcioso = new Double(this.qaOcioso) / this.simulation.getDeltaT() * 100;
+    	this.promedioPuntosSobrantesQa = this.puntosSobrantesQa / this.simulation.getDeltaT();
+    	this.promedioPuntosFaltantesQa = this.puntosNoProbados / this.simulation.getDeltaT();
     }
 
     public void imprimir(){
@@ -173,4 +173,11 @@ public class SimulationResults {
 	public double getPorcentajeQaOcioso() {
 		return porcentajeQaOcioso;
 	}
+	
+    public double getPromedioPuntosSobrantesQa(){
+    	return this.promedioPuntosSobrantesQa;
+    }
+    public double getPromedioPuntosFaltantesQa(){
+    	return this.promedioPuntosFaltantesQa;
+    }
 }

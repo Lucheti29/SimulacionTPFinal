@@ -12,9 +12,9 @@ import com.github.luksdlt92.simulacion.fdp.ComplexityPointsQA;
 
 public class SimulationInstance {
 
-	private static final double PORCENTAJE_DE_PRIORIDAD = 0.1;
-	private static final int HOURS_DEV_WORK_PER_DAY = 6;
-	private static final int HOURS_QA_WORK_PER_DAY = 8;
+	private static final double PORCENTAJE_DE_PRIORIDAD = 0.35;
+	private static final int HOURS_DEV_WORK_PER_DAY = 8;
+	private static final int HOURS_QA_WORK_PER_DAY = 6;
 	private static final int SPRINTS = 10000;
 	
 	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
@@ -243,6 +243,10 @@ public class SimulationInstance {
 		return this.cantSprintsFinal;
 	}
 
+	public int getDeltaT(){
+		return this.deltaT;
+	}
+	
 	public int getCantEquipos() {
 		int amount = 0;
 		for (List<Team> teams : teamsPerTech.values()) {

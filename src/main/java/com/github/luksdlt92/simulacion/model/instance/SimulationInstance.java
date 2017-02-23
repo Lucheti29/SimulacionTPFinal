@@ -136,7 +136,8 @@ public class SimulationInstance {
 			}
 			// ---------- End devs ----------
 
-			// ---------- Start QA ----------
+			calcularQa();
+/*			// ---------- Start QA ----------
 			// Se calcula el total de horas por día que usa QA para test
         	int qaHoursWork = HOURS_QA_WORK_PER_DAY * qaPeopleAmount;
 
@@ -166,6 +167,7 @@ public class SimulationInstance {
 				} else if (qaHoursWork > 0) {
 					// Quedaron horas sobrantes de QA
 					increaseQaOcioso();
+					sumarPuntosSobrantesQa(-this.CP);
 				}
 			}
 
@@ -173,7 +175,7 @@ public class SimulationInstance {
 			this.CPP = 0;
         	this.CP = 0;
 			// ---------- End QA ----------
-        
+*/        
         	// ---------- Start Write Line CSV ----------
         	this.results.calcularResultados();
         	CSVUtil.writeLine(writer, this.deltaT, this.results);
@@ -297,5 +299,46 @@ public class SimulationInstance {
 
 			return new SimulationInstance(this.mQAPeopleAmount, this.mProjectsAmount, this.mTechnologySeniorities, this.cantSprintsFinal, this.stageId);
 		}
+	}
+	
+	private void calcularQa(){
+		
+		// ---------- Start QA ----------
+		// Se calcula el total de horas por día que usa QA para test
+	   	int qaHoursWork = HOURS_QA_WORK_PER_DAY * qaPeopleAmount;
+	   	int puntosProbados = 0;
+	   	// Se testean los puntos prioritarios
+	   	for(int i=0;i<qaHoursWork;i++){
+	   		puntosProbados += new Double(ComplexityPointsQA.getPointsTestedPerHour()).intValue();
+	   	}
+	   	
+	   	//resto puntosProbados a CPP
+	   	this.CPP -= puntosProbados;
+	   	
+	   	if(this.CPP > 0){
+	   		//No alcanzo a completar prioridad
+	   		increaseNoCompletaPrioridad();
+	   		increaseNoCompletaComun();
+	   		sumarPuntosNoProbados(-this.CPP + this.CP); //-cpp porque esta en negativo
+	   	}else{
+	   		//Alcanzo a completar prioridad
+	   		
+	   		this.CPP = 0; //Vuelvo a 0 el valor de CPP en caso de que este en negativo
+	   		
+	   		this.CP -= puntosProbados;
+	   		
+	   		if(this.CP > 0){
+	   			//No alcanzo a completar comun
+	   			increaseNoCompletaComun();
+	   			sumarPuntosNoProbados(this.CP);
+	   		}else if(this.CP < 0){
+	   			//QA Ocioso
+	   			increaseQaOcioso();
+	   			sumarPuntosSobrantesQa(-this.CP); //el - porque esta negativo
+	   			
+	   			this.CP = 0; //Vuelvo el valor a 0
+	   		}
+	   	}
+		
 	}
 }

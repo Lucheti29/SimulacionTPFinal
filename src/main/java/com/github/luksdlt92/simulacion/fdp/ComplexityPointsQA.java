@@ -6,12 +6,9 @@ public class ComplexityPointsQA {
 
     public static double getPointsTestedPerHour() {
     	
-    	double k = 0.53008;
-    	double a = 2.5674;
-    	double b = 15.176;
-    	double y = 0.10339;
     	double r = random();
-    	
-        return pow( (pow(a,-1/k)), -1/r) * (y * pow( (pow(a, -1/k) - 1), 1/r) + b); //Dagum 4P
+    	double resParcial = pow( (1/(pow(r,1.88651)) - 1), 0.3894991041520604);
+        
+        return (0.10399 * resParcial + 15.176 ) / ( resParcial );
     }
 }

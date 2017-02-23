@@ -15,6 +15,11 @@ public class TestFdp {
 			PrintWriter writer = new PrintWriter("testFile.txt", "UTF-8");
 			
 			int i;
+			
+			writer.println("------------->valores fdp QA<-------------");
+        	for(i=0;i<100;i++){
+				writer.println(ComplexityPointsQA.getPointsTestedPerHour());
+			}
 
 			writer.println("------------->valores fdp Android Jr<-------------");
 			for(i=0;i<100;i++){

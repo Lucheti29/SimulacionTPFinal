@@ -1,5 +1,7 @@
 *.class
 
+testFile.txt
+
 /bin/
 /build/
 /.gradle/

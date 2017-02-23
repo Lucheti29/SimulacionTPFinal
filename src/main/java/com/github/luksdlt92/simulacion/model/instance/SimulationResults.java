@@ -14,6 +14,9 @@ public class SimulationResults {
     private int qaOcioso = 0;
 	private int sprintFallidos = 0;
 	private int sprintOciosos = 0;
+	
+	private int contadorFallas = 0;
+	private int contadorOcioso = 0;
 	//Resultados
 	private double porcentajeSprintsFallidos = 0;
     private double porcentajeSprintsOciosos = 0;
@@ -53,8 +56,15 @@ public class SimulationResults {
     	System.out.println("Promedio de sobrante de puntos de QA: "+ promedioPuntosSobrantesQa);
     	System.out.println("Promedio de faltante de puntos de QA: "+ promedioPuntosFaltantesQa);
     	
+    	System.out.println("---------------------------------------------------");
+    	double porcentajePostaFalla = new Double(this.contadorFallas) / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
+    	double porcentajePostaOcioso = new Double(this.contadorOcioso) / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
+    	System.out.println("Porcentaje posta fallas: "+ porcentajePostaFalla);
+    	System.out.println("Porcentaje posta ocioso: "+ porcentajePostaOcioso);
     	System.out.println("Fallidos: "+this.sprintFallidos);
     	System.out.println("Ociosos: "+this.sprintOciosos);
+    	System.out.println("contadorFallasPosta: " + this.contadorFallas);
+    	System.out.println("contadorOciosoPosta: " + this.contadorOcioso);
     	System.out.println("Sprint total: "+this.simulation.getCantSprintsFinal());
     }
 
@@ -63,6 +73,7 @@ public class SimulationResults {
 	}
 
 	public void setAlgunEquipoFallo(boolean algunEquipoFallo) {
+		this.contadorFallas++;
 		this.algunEquipoFallo = algunEquipoFallo;
 	}
 
@@ -71,6 +82,7 @@ public class SimulationResults {
 	}
 
 	public void setAlgunEquipoOcioso(boolean algunEquipoOcioso) {
+		this.contadorOcioso++;
 		this.algunEquipoOcioso = algunEquipoOcioso;
 	}
 
@@ -179,5 +191,10 @@ public class SimulationResults {
     }
     public double getPromedioPuntosFaltantesQa(){
     	return this.promedioPuntosFaltantesQa;
+    }
+    
+    public void resetBooleans(){
+    	this.algunEquipoFallo = Boolean.FALSE;
+    	this.algunEquipoOcioso = Boolean.FALSE;
     }
 }

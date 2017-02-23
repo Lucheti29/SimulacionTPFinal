@@ -4,7 +4,7 @@ import static java.lang.Math.*;
 
 public class ComplexityPointsQA {
 
-	private static final double COTA_SUPERIOR = 15;
+	private static final double COTA_SUPERIOR = 1000;
 	private static final double COTA_INFERIOR = 0;
 	
     public static double getPointsTestedPerHour() {

@@ -81,7 +81,7 @@ public class SimulationInstance {
     	// ---------- Open CSV ----------
     	FileWriter writer = CSVUtil.openCsv(this.stageId);
     	
-        while (deltaT <= cantSprintsFinal) {
+        while (deltaT < cantSprintsFinal) {
         	deltaT++;
 
         	resetBooleans();
@@ -322,7 +322,7 @@ public class SimulationInstance {
 	   		//No alcanzo a completar prioridad
 	   		increaseNoCompletaPrioridad();
 	   		increaseNoCompletaComun();
-	   		sumarPuntosNoProbados(-this.CPP + this.CP); //-cpp porque esta en negativo
+	   		sumarPuntosNoProbados(this.CPP + this.CP);
 	   	}else{
 	   		//Alcanzo a completar prioridad
 	   		

@@ -5,10 +5,10 @@ public class SimulationResults {
 	private SimulationInstance simulation;
 	private boolean algunEquipoFallo = Boolean.FALSE;
     private boolean algunEquipoOcioso = Boolean.FALSE;
-    private int puntosNoCumplidos = 0;
-    private int puntosSobrantes = 0;
-    private int puntosNoProbados = 0;
-	private int puntosSobrantesQa = 0;
+    private double puntosNoCumplidos = 0;
+    private double puntosSobrantes = 0;
+    private double puntosNoProbados = 0;
+	private double puntosSobrantesQa = 0;
     private int noCompletaPrioridad = 0;
     private int noCompletaComun = 0;
     private int qaOcioso = 0;
@@ -31,13 +31,13 @@ public class SimulationResults {
     }
 
     public void calcularResultados() {
-    	this.porcentajeSprintsFallidos = this.sprintFallidos / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeSprintsOciosos = this.sprintOciosos / this.simulation.getCantSprintsFinal() * 100;
+    	this.porcentajeSprintsFallidos = new Double(this.sprintFallidos) / this.simulation.getCantSprintsFinal() * 100;
+    	this.porcentajeSprintsOciosos = new Double(this.sprintOciosos) / this.simulation.getCantSprintsFinal() * 100;
     	this.promedioPuntosSobrantesPorSprintYEquipo = this.puntosSobrantes / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
     	this.promedioPuntosFaltantesPorSprintYEquipo = this.puntosNoCumplidos / (this.simulation.getCantSprintsFinal() * this.simulation.getCantEquipos());
-    	this.porcentajeQaNoCompletaPrioridad = this.noCompletaPrioridad / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeQaNoCompletaComun = this.noCompletaComun / this.simulation.getCantSprintsFinal() * 100;
-    	this.porcentajeQaOcioso = this.qaOcioso / this.simulation.getCantSprintsFinal() * 100;
+    	this.porcentajeQaNoCompletaPrioridad = new Double(this.noCompletaPrioridad) / this.simulation.getCantSprintsFinal() * 100;
+    	this.porcentajeQaNoCompletaComun = new Double(this.noCompletaComun) / this.simulation.getCantSprintsFinal() * 100;
+    	this.porcentajeQaOcioso = new Double(this.qaOcioso) / this.simulation.getCantSprintsFinal() * 100;
     	this.promedioPuntosSobrantesQa = this.puntosSobrantesQa / this.simulation.getCantSprintsFinal();
     	this.promedioPuntosFaltantesQa = this.puntosNoProbados / this.simulation.getCantSprintsFinal();
     }
@@ -52,6 +52,10 @@ public class SimulationResults {
     	System.out.println("Promedio de faltante de puntos de DEV: "+ promedioPuntosFaltantesPorSprintYEquipo);
     	System.out.println("Promedio de sobrante de puntos de QA: "+ promedioPuntosSobrantesQa);
     	System.out.println("Promedio de faltante de puntos de QA: "+ promedioPuntosFaltantesQa);
+    	
+    	System.out.println("Fallidos: "+this.sprintFallidos);
+    	System.out.println("Ociosos: "+this.sprintOciosos);
+    	System.out.println("Sprint total: "+this.simulation.getCantSprintsFinal());
     }
 
 	public boolean isAlgunEquipoFallo() {
@@ -70,27 +74,27 @@ public class SimulationResults {
 		this.algunEquipoOcioso = algunEquipoOcioso;
 	}
 
-	public int getPuntosNoCumplidos() {
+	public double getPuntosNoCumplidos() {
 		return puntosNoCumplidos;
 	}
 
-	public void sumarPuntosNoCumplidos(int puntosNoCumplidos){
+	public void sumarPuntosNoCumplidos(double puntosNoCumplidos){
 		this.puntosNoCumplidos += puntosNoCumplidos;
 	}
 	
-	public int getPuntosSobrantes() {
+	public double getPuntosSobrantes() {
 		return puntosSobrantes;
 	}
 
-	public void sumarPuntosSobrantes(int puntosSobrantes) {
+	public void sumarPuntosSobrantes(double puntosSobrantes) {
 		this.puntosSobrantes += puntosSobrantes;
 	}
 
-	public int getPuntosNoProbados() {
+	public double getPuntosNoProbados() {
 		return puntosNoProbados;
 	}
 
-	public void sumarPuntosNoProbados(int puntosNoProbados) {
+	public void sumarPuntosNoProbados(double puntosNoProbados) {
 		this.puntosNoProbados += puntosNoProbados;
 	}
 
@@ -168,9 +172,5 @@ public class SimulationResults {
 
 	public double getPorcentajeQaOcioso() {
 		return porcentajeQaOcioso;
-	}
-
-	public void sumarPuntosSobrantesQa(int puntos){
-		this.puntosSobrantesQa += puntos;
 	}
 }

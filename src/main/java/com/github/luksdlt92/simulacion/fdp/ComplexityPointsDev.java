@@ -19,7 +19,7 @@ public class ComplexityPointsDev {
     	if( technology == Technology.IOS )
     		rParcial = 140.7 * pow( 1/pow(1 - x, 0.0200582) - 1, 0.1487187876444431 ) * 0.78;
     	if( technology == Technology.WEB )
-    		rParcial 3868.45 * (0.00102677 - pow(1 - pow(1-x,0.380662),0.3364284753061499) * 0.8;
+    		rParcial = 3868.45 * (0.00102677 - pow(1 - pow(1-x,0.380662),0.3364284753061499) * 0.8;
 	    
         return rParcial * hoursWork;
     }

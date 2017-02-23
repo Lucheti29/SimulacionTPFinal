@@ -35,8 +35,10 @@ public class Team {
             }
         }*/
     	
-    	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
-    			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();
+    	/*estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
+    			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();*/
+	    
+	estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
     	
     	System.out.println("Estimated points: " + new Integer(estimatedPoints).toString() );
 

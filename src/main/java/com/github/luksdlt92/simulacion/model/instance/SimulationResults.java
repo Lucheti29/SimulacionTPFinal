@@ -59,12 +59,16 @@ public class SimulationResults {
     	System.out.println("---------------------------------------------------");
     	double porcentajePostaFalla = new Double(this.contadorFallas) / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
     	double porcentajePostaOcioso = new Double(this.contadorOcioso) / (this.simulation.getDeltaT() * this.simulation.getCantEquipos());
-    	System.out.println("Porcentaje posta fallas: "+ porcentajePostaFalla);
-    	System.out.println("Porcentaje posta ocioso: "+ porcentajePostaOcioso);
-    	System.out.println("Fallidos: "+this.sprintFallidos);
-    	System.out.println("Ociosos: "+this.sprintOciosos);
-    	System.out.println("contadorFallasPosta: " + this.contadorFallas);
-    	System.out.println("contadorOciosoPosta: " + this.contadorOcioso);
+    	//System.out.println("Porcentaje posta fallas: "+ porcentajePostaFalla);
+    	//System.out.println("Porcentaje posta ocioso: "+ porcentajePostaOcioso);
+    	//System.out.println("Fallidos: " + this.sprintFallidos);
+    	//System.out.println("Ociosos: " + this.sprintOciosos);
+    	//System.out.println("contadorFallasPosta: " + this.contadorFallas);
+    	double porcentajeDeFallas = this.contadorFallas * 100 / (simulation.getDeltaT() * simulation.getCantEquipos());
+		System.out.println("Porcentaje de fallas: " + porcentajeDeFallas);
+    	//System.out.println("contadorOciosoPosta: " + this.contadorOcioso);
+		double porcentajeDeOcioso = this.contadorOcioso * 100 / (simulation.getDeltaT() * simulation.getCantEquipos());
+		System.out.println("Porcentaje de ocioso: " + porcentajeDeOcioso);
     	System.out.println("Sprint total: "+this.simulation.getCantSprintsFinal());
     }
 

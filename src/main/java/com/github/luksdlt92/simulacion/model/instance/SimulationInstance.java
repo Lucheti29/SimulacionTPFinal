@@ -14,7 +14,7 @@ public class SimulationInstance {
 
 	private static final double PORCENTAJE_DE_PRIORIDAD = 0.35;
 	private static final int HOURS_DEV_WORK_PER_DAY = 6;
-	private static final int HOURS_QA_WORK_PER_DAY = 8;
+	private static final int HOURS_QA_WORK_PER_DAY = 4;
 	private static final int SPRINTS = 10000;
 	
 	private int CPP;// Cantidad de puntos de complejidad con prioridad a probar por QA
@@ -313,13 +313,13 @@ public class SimulationInstance {
 		
 		// ---------- Start QA ----------
 		// Se calcula el total de horas por día que usa QA para test
-	   	int qaHoursWork = HOURS_QA_WORK_PER_DAY * qaPeopleAmount;
+	   	int qaHoursWork = HOURS_QA_WORK_PER_DAY * qaPeopleAmount * 10;
 	   	int puntosProbados = 0;
 	   	// Se testean los puntos prioritarios
 	   	for(int i=0;i<qaHoursWork;i++){
 	   		puntosProbados += new Double(ComplexityPointsQA.getPointsTestedPerHour()).intValue();
 	   	}
-	   	
+
 	   	//resto puntosProbados a CPP
 	   	this.CPP -= puntosProbados;
 	   	

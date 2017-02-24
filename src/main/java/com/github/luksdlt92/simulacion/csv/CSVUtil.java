@@ -14,8 +14,8 @@ public class CSVUtil {
 
 	private static final char DEFAULT_SEPARATOR = ',';
 	private static final char DEFAULT_QUOTE = ' ';
-	private static final String DIRECTORY = "csv/";
-	private static final String DEFAULT_PARTIAL_FILE_NAME = LocalDateTime.now().toString() + " - resultados_stage_";
+	private static final String DIRECTORY = "./csv/";
+	private static final String DEFAULT_PARTIAL_FILE_NAME = "resultados_stage_";
 	private static final String[] HEADERS = {"deltaT", 
 											 "porcentajeQaNoCompletaPrioridad", 
 											 "porcentajeQaNoCompletaComun",
@@ -36,7 +36,7 @@ public class CSVUtil {
 			File dir = new File(DIRECTORY);
 			if (!dir.exists())
 				dir.mkdirs();
-			String completePath = dir.getAbsolutePath() + File.separator + fileName;
+			String completePath = "./csv/" + fileName;
 			File csv = new File(completePath);
 			writer = new FileWriter(csv, Boolean.TRUE);
 			return writer;

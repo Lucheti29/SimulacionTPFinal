@@ -40,6 +40,8 @@ public class Team {
     	/*estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
     			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();*/
 
+        this.estimatedPoints = 0;
+
     	int i = 0;
     	while (i < cantDevs()) {
     	    i++;

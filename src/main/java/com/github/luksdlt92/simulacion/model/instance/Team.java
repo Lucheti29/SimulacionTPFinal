@@ -3,6 +3,8 @@ package com.github.luksdlt92.simulacion.model.instance;
 import com.github.luksdlt92.simulacion.constant.Seniority;
 import com.github.luksdlt92.simulacion.fdp.ComplexityPointsDev;
 
+import java.util.Random;
+
 public class Team {
 
 	private static final int DAYS_PER_SPRINT = 10;
@@ -66,7 +68,7 @@ public class Team {
             // for each dev
             for (int i = 0; i < devs[seniority]; i++) {
                 // for each hour of work
-                for (int i2 = 0; i2 < hoursWork * DAYS_PER_SPRINT; i2++) {
+                for (int i2 = 0; i2 < hoursWork * DAYS_PER_SPRINT * getRandom(0.9, 1); i2++) {
                     this.developedPoints += ComplexityPointsDev.getCompletedPointsPerHour(technology, seniority);
                 }
             }
@@ -77,6 +79,11 @@ public class Team {
     	//System.out.println("Developed points: " + new Double(developedPoints).toString() );
     	
         return new Double(this.developedPoints).intValue();
+    }
+
+    private static double getRandom(double min, double max) {
+        Random r = new Random();
+        return min + (max - min) * r.nextDouble();
     }
 
     /**

@@ -39,8 +39,13 @@ public class Team {
     	
     	/*estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, -1) 
     			* hoursWork * DAYS_PER_SPRINT * this.cantDevs() ).intValue();*/
-	    
-    	this.estimatedPoints = new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork)).intValue();
+
+    	int i = 0;
+    	while (i < cantDevs()) {
+    	    i++;
+    	    // El x10 es porque son 10 dias el sprint
+            this.estimatedPoints += new Double(ComplexityPointsDev.getEstimatedPointsPerSprint(this.technology, hoursWork * 10)).intValue();
+        }
     	
     	//System.out.println("Estimated points: " + new Double(estimatedPoints).toString() );
 
